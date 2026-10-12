@@ -330,9 +330,9 @@ body{width:1280px;height:640px;overflow:hidden;background:#20301f;background-ima
 .kicker{font-family:ui-monospace,Consolas,monospace;letter-spacing:.4em;color:var(--gold);font-size:16px;margin-bottom:18px;}
 .left h1{font-size:64px;letter-spacing:.04em;line-height:1.1;margin-bottom:14px;}
 .sub{font-size:24px;color:#cfd6c6;line-height:1.5;margin-bottom:26px;}
-.stats{display:flex;gap:12px;flex-wrap:wrap;}
-.stat{border:1.5px solid rgba(246,239,220,.35);border-radius:999px;padding:8px 16px;font-size:17px;}
-.stat b{color:var(--gold);}
+.pills{display:flex;gap:12px;flex-wrap:wrap;}
+.pill{border:1.5px solid rgba(246,239,220,.35);border-radius:999px;padding:8px 16px;font-size:17px;}
+.pill b{color:var(--gold);}
 .url{margin-top:30px;font-family:ui-monospace,Consolas,monospace;font-size:18px;color:#9aa892;}
 .right{position:relative;width:560px;height:640px;flex:none;}
 .right .card{position:absolute;top:50%;left:0;width:420px;transform-origin:center;}
@@ -346,11 +346,11 @@ ${CARD_CSS}
     <div class="kicker">SECRET MENU LAB</div>
     <h1>麦门隐藏菜单<br>研究所</h1>
     <div class="sub">用麦当劳真实在售餐品组合隐藏吃法<br>校验门店可做 · 实时算价 · 配方卡 · 一键下单</div>
-    <div class="stats">
-      <span class="stat"><b>12</b> 道隐藏吃法</span>
-      <span class="stat"><b>10</b> 个 MCP 工具</span>
-      <span class="stat"><b>0</b> 依赖</span>
-      <span class="stat">基于麦当劳官方 MCP</span>
+    <div class="pills">
+      <span class="pill"><b>12</b> 道隐藏吃法</span>
+      <span class="pill"><b>10</b> 个 MCP 工具</span>
+      <span class="pill"><b>0</b> 依赖</span>
+      <span class="pill">基于麦当劳官方 MCP</span>
     </div>
     <div class="url">${esc(REPO_URL.replace('https://', ''))}</div>
   </div>
