@@ -19,7 +19,9 @@ import { loadSampleMenu, loadSampleNutrition } from './sample.mjs';
 import { sumNutrition, mealBill } from './nutrition.mjs';
 import { sumPrice, quoteViaMcp } from './pricing.mjs';
 import { normalizeMenuData, parseNutritionData, parseCampaignCalendar } from './mcp-parse.mjs';
-import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, writeFileEnsured } from './card.mjs';
+import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, printCardMarkdown, writeFileEnsured } from './card.mjs';
+/** GitHub Pages 根地址（独立卡片页 docs/cards/<id>.html） */
+const PAGES_URL = 'https://wangwengao.github.io/mcd-secret-menu-lab';
 import { checkText, checkRecipes } from './compliance.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -82,7 +84,7 @@ const HELP = `
   --difficulty <1-3>   最高难度（lab / recipes）
   --tag <标签>         标签过滤（lab / recipes）
   --out <path>         card / demo 的输出路径
-  --format text        card 命令只输出文本版
+  --format text|md     card：只输出文本版（text 终端用；md 聊天 / Agent 回复用，不含长横线）
   --spec <json|文件>   card：为自创吃法出卡，JSON 至少含 name / ingredients / steps（供 Agent 使用）
   --png                card：生成后自动用本机 Edge / Chrome 截图成 PNG
   --takeway <code>     order 命令的取餐方式（eat-in 堂食 / locker-out 外带，缺省取算价返回的第一项）
@@ -267,6 +269,11 @@ async function cmdCard(flags) {
 
   if (flags.format === 'text') {
     console.log(printCardText(recipe, data));
+    return;
+  }
+  if (flags.format === 'md') {
+    const cardLink = custom ? '' : `${PAGES_URL}/cards/${recipe.id}.html`;
+    console.log(printCardMarkdown(recipe, data, { cardLink }));
     return;
   }
   const out = typeof flags.out === 'string' ? resolve(flags.out) : resolve(process.cwd(), 'output', `card-${recipe.id}.html`);

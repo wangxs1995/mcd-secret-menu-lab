@@ -362,6 +362,36 @@ ${cards}
 `;
 }
 
+/** Markdown 版配方卡（聊天窗口 / Agent 回复使用：不用长横线，避免在比例字体下折行） */
+export function printCardMarkdown(recipe, data = {}, { cardLink = '' } = {}) {
+  const { resolved = [], price = null, stats = null, bill = null, source = 'sample' } = data;
+  const lines =
+    price?.lines?.length > 0
+      ? price.lines
+      : resolved.map(({ ingredient, item }) => ({
+          name: item?.name ?? ingredient.name,
+          price: Number.isFinite(item?.priceYuan) ? item.priceYuan : null,
+        }));
+  const subtotal = price?.subtotal ?? lines.reduce((sum, l) => sum + (Number.isFinite(l.price) ? l.price : 0), 0);
+  const heat = `${'★'.repeat(recipe.heat)}${'☆'.repeat(Math.max(0, 5 - recipe.heat))}`;
+  const out = [];
+  out.push(`### ${recipe.emoji} ${recipe.name} —— ${recipe.tagline}`);
+  out.push(`\`${DIFFICULTY_LABEL[recipe.difficulty] ?? '未知难度'}\` · 机制：${MECHANICS[recipe.mechanic] ?? recipe.mechanic} · 场景：${recipe.vibes.join(' / ')} · 热度 ${heat}`);
+  out.push('');
+  out.push(`**原料**（${source === 'live' ? 'MCP 实时算价' : '快照价，以门店实时为准'}）`);
+  for (const line of lines) out.push(`- ${line.name}${Number.isFinite(line.price) ? `　${fmtMoney(line.price)}` : ''}`);
+  out.push(`- **合计 ${fmtMoney(subtotal)}**`);
+  out.push('');
+  out.push('**改造步骤**（到手自己动手，不用麻烦店员）');
+  recipe.steps.forEach((step, index) => out.push(`${index + 1}. ${step}`));
+  out.push('');
+  out.push(`**营养**：${nutritionLine(stats)}（按营养表累加，估算，仅供参考）`);
+  if (bill) out.push(`**热量账单**：散步约 ${bill.walkMin} 分钟 / 慢跑约 ${bill.jogMin} 分钟`);
+  if (recipe.tip) out.push(`**老饕提示**：${recipe.tip}`);
+  if (cardLink) out.push(`🃏 **配方卡**：${cardLink}`);
+  return out.join('\n');
+}
+
 /** 纯文本版配方卡（终端 / Agent 使用） */
 export function printCardText(recipe, data = {}) {
   const { resolved = [], price = null, stats = null, bill = null } = data;
