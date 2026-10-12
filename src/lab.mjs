@@ -33,6 +33,7 @@ const DEFAULT_LINT_FILES = [
   'docs/share/xiaohongshu.md',
   'docs/share/zhihu-v2ex.md',
   'docs/share/moments.md',
+  'workbuddy.md',
 ];
 
 const HERE = dirname(fileURLToPath(import.meta.url));
