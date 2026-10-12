@@ -168,7 +168,7 @@ export function renderCardFragment(recipe, data = {}) {
     <ol class="steps">${steps}</ol>
   </section>
   <section class="sec">
-    <h2>营养快照</h2>
+    <h2>热量快照</h2>
     <div class="stats">${statsMarkup(stats)}</div>
     ${billText ? `<div class="bill">🔥 热量账单：${esc(billText)}（估算，仅供参考）</div>` : ''}
   </section>
@@ -220,7 +220,7 @@ ${CARD_CSS}
   <header class="page-hero">
     <p class="kicker">SECRET MENU LAB</p>
     <h1>${esc(title)}</h1>
-    <p>${esc(subtitle || '用麦当劳真实在售餐品组合隐藏吃法 · 自动算营养价格 · 一键下单')}</p>
+    <p>${esc(subtitle || '用麦当劳真实在售餐品组合隐藏吃法 · 自动算热量算价格 · 一键下单')}</p>
     ${note ? `<p class="page-note">${esc(note)}</p>` : ''}
   </header>
   <section class="toolbar" aria-label="筛选与抽取">
@@ -385,7 +385,7 @@ export function printCardMarkdown(recipe, data = {}, { cardLink = '' } = {}) {
   out.push('**改造步骤**（到手自己动手，不用麻烦店员）');
   recipe.steps.forEach((step, index) => out.push(`${index + 1}. ${step}`));
   out.push('');
-  out.push(`**营养**：${nutritionLine(stats)}（按营养表累加，估算，仅供参考）`);
+  out.push(`**热量**：${nutritionLine(stats)}（按营养表累加，估算，仅供参考）`);
   if (bill) out.push(`**热量账单**：散步约 ${bill.walkMin} 分钟 / 慢跑约 ${bill.jogMin} 分钟`);
   if (recipe.tip) out.push(`**老饕提示**：${recipe.tip}`);
   if (cardLink) out.push(`🃏 **配方卡**：${cardLink}`);
@@ -418,7 +418,7 @@ export function printCardText(recipe, data = {}) {
   out.push('改造步骤：');
   recipe.steps.forEach((step, index) => out.push(`  ${index + 1}. ${step}`));
   out.push('');
-  out.push(`营养：${nutritionLine(stats)}`);
+  out.push(`热量：${nutritionLine(stats)}`);
   if (bill) out.push(`热量账单：散步约 ${bill.walkMin} 分钟 / 慢跑约 ${bill.jogMin} 分钟（估算）`);
   out.push(`老饕提示：${recipe.tip}`);
   out.push('━'.repeat(46));

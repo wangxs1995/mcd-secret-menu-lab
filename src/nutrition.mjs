@@ -4,7 +4,7 @@
  */
 import { findNutrition } from './recipes.mjs';
 
-export const NUTRITION_DISCLAIMER = '营养数据为近似值，仅供参考，不构成营养或医疗建议。';
+export const NUTRITION_DISCLAIMER = '热量与营养成分为近似值，仅供参考，不构成营养或医疗建议。';
 
 /**
  * 汇总一组已匹配原料的营养（按数量累加）
@@ -38,13 +38,15 @@ export function mealBill(kcal) {
   return { walkMin: round5(kcal / 4.0), jogMin: round5(kcal / 9.5) };
 }
 
-/** 营养行的紧凑文案：`382 千卡 · 蛋白质 6g · 脂肪 15g · 钠 201mg` */
+/** 热量行的紧凑文案：`382 千卡（蛋白质 6g · 脂肪 15g · 钠 201mg）` */
 export function nutritionLine(stats) {
-  if (!stats || stats.kcal === null) return '营养数据待补全（该餐品不在营养表中）';
-  const parts = [`${Math.round(stats.kcal)} 千卡`];
-  if (Number.isFinite(stats.protein)) parts.push(`蛋白质 ${Math.round(stats.protein)}g`);
-  if (Number.isFinite(stats.fat)) parts.push(`脂肪 ${Math.round(stats.fat)}g`);
-  if (Number.isFinite(stats.sodium)) parts.push(`钠 ${Math.round(stats.sodium)}mg`);
-  if (stats.known < stats.total) parts.push(`（${stats.total - stats.known} 项原料无营养数据）`);
-  return parts.join(' · ');
+  if (!stats || stats.kcal === null) return '热量数据待补全（该餐品不在营养表中）';
+  const detail = [];
+  if (Number.isFinite(stats.protein)) detail.push(`蛋白质 ${Math.round(stats.protein)}g`);
+  if (Number.isFinite(stats.fat)) detail.push(`脂肪 ${Math.round(stats.fat)}g`);
+  if (Number.isFinite(stats.sodium)) detail.push(`钠 ${Math.round(stats.sodium)}mg`);
+  let text = `${Math.round(stats.kcal)} 千卡`;
+  if (detail.length > 0) text += `（${detail.join(' · ')}）`;
+  if (stats.known < stats.total) text += `，${stats.total - stats.known} 项原料无营养数据`;
+  return text;
 }

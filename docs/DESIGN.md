@@ -4,7 +4,7 @@
 
 ## 1. 一句话
 
-用麦当劳真实在售餐品组合出「隐藏吃法」，自动验证可行性、计算营养与价格、生成可晒的配方卡，并一键下单。
+用麦当劳真实在售餐品组合出「隐藏吃法」，自动验证可行性、计算热量与价格、生成可晒的配方卡，并一键下单。
 
 ## 2. 为什么做这个
 
@@ -42,7 +42,7 @@
 - `src/mcp-client.mjs`：极简 Streamable HTTP JSON-RPC 客户端（initialize → tools/list → tools/call，含 SSE 解析与错误码处理）。
 - `src/lab.mjs`：CLI 入口（`menu` / `lab` / `order` / `card` 子命令）。
 - `src/recipes.mjs`：隐藏吃法知识库 + 组合生成规则。
-- `src/nutrition.mjs`、`src/pricing.mjs`：营养与价格计算、评分。
+- `src/nutrition.mjs`、`src/pricing.mjs`：热量与价格计算、评分。
 - `src/card.mjs`：配方卡 HTML 渲染（自包含 CSS，无外部资源）。
 - `src/sample-data/`：脱敏样例数据（菜单 / 营养快照）——无 Token 也能完整演示。
 - `SKILL.md`：Agent Skill 入口（frontmatter + 使用说明），供 WorkBuddy / Claude / Cherry Studio 使用。

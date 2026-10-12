@@ -211,7 +211,7 @@ mcd-secret-menu-lab/
 │   ├── compliance.mjs           # 文案合规自检（lint 命令与测试共用）
 │   ├── mcp-parse.mjs            # 真实返回解析（说明文字 + JSON / 紧凑表格 / 菜单 / 活动日历）
 │   ├── recipes.mjs              # 12 道隐藏吃法知识库 + 匹配 / 校验 / 筛选
-│   ├── nutrition.mjs            # 营养累加 + 热量账单
+│   ├── nutrition.mjs            # 热量与营养成分累加 + 热量账单
 │   ├── pricing.mjs              # 本地小计 + MCP 实时算价
 │   ├── card.mjs                 # 配方卡 HTML / 文本 / 演示页渲染
 │   ├── sample.mjs               # 快照加载
