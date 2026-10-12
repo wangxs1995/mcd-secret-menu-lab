@@ -17,6 +17,7 @@ import { renderCardHtml, printCardText } from '../src/card.mjs';
 import { parseSseForId } from '../src/mcp-client.mjs';
 import { extractJson, parseCompactTable, parseNutritionData, normalizeMenuData, parseCampaignCalendar } from '../src/mcp-parse.mjs';
 import { checkText, checkRecipes } from '../src/compliance.mjs';
+import { inventRecipes } from '../src/invent.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const menu = loadSampleMenu();
@@ -144,6 +145,20 @@ test('文案合规：配方与对外文档无歧视 / 对比 / 功效 / 绝对�
   assert.equal(bad.length, 1);
   assert.equal(bad[0].rule, 'discrimination');
   assert.equal(checkText('学生党 / 打工人的性价比之选').length, 0);
+});
+
+test('实验室发明：候选来自真实菜单、不与图鉴重复、文案合规', () => {
+  const candidates = inventRecipes(menu.items, nutrition, { count: 8, seed: 7 });
+  assert.ok(candidates.length >= 3, `候选不足：${candidates.length}`);
+  const known = new Set(RECIPES.map((r) => validateRecipe(r, menu.items).resolved.map((x) => x.item.name).sort().join('|')));
+  for (const { spec, price } of candidates) {
+    for (const name of spec.ingredients) assert.ok(menu.items.some((item) => item.name === name), `原料不在菜单：${name}`);
+    assert.ok(!known.has([...spec.ingredients].sort().join('|')), `与图鉴重复：${spec.name}`);
+    assert.ok(Number.isFinite(price), `${spec.name} 无价格`);
+    assert.deepEqual(checkText([spec.name, spec.tagline, ...spec.steps].join('\n')), []);
+  }
+  const cheap = inventRecipes(menu.items, nutrition, { budget: 15, count: 5, seed: 1 });
+  for (const { price } of cheap) assert.ok(price <= 15);
 });
 
 test('CLI 冒烟：recipes --json / lab --offline --json / card --offline', () => {

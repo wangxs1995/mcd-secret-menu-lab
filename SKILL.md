@@ -48,6 +48,23 @@ node src/lab.mjs order --recipe fries-float --store <storeCode> --yes  # 真实�
 6. `calculate-price`（`items=[{productCode, quantity}]`）→ 金额单位为**分**；记录返回的 `takeWayList[].code`
 7. 用户明确确认后 `create-order`（同上参数 + `takeWayCode` + `needTableware`）
 
+## 创作新吃法（图鉴之外）
+
+图鉴 12 道是经过验证的「保底方案」，优先推荐；以下情况去创作新的：用户说「来个新的 / 没见过的 / 再换一个」、当前门店图鉴里都做不了、用户指定了图鉴没有的原料。
+
+**创作原则**
+
+1. 2～3 个真实在售单品（必须来自 `query-meals`，不能是套餐 / 多人餐 / 周边）
+2. 一个明确的改造机制：蘸 / 夹 / 倒 / 冰火 / 摇 / 组合；追求一种对比——咸甜、冰火、脆软、加量、平替
+3. 到手自己动手就能完成，不要求店员加工、不用额外工具
+4. 命名有梗但遵守措辞红线；一句话卖点 + 3 步内改造步骤
+5. 价格走 `calculate-price`，热量按营养表累加；回复里必须标注「自创吃法，未经图鉴收录」
+
+**流程**
+
+- 模式 A：`node src/lab.mjs lab --invent --budget 30`（可加 `--vibe 夜宵`、`--count 5`、`--seed 7` 换一组）得到候选与现成的 `card --spec` 命令；挑一个，可微调名字文案，再 `card --spec '…' --png` 出卡
+- 模式 B：按上面的原则自己组合，用 `query-meals` 校验、`calculate-price` 算价、营养表累加热量，按 Markdown 卡片格式输出
+
 ## 硬性规则（必须遵守）
 
 1. **绝不臆造餐品**：所有原料必须来自 `query-meals` 的实时返回；菜单里没有的餐品不得出现在方案里；早餐单品只在早餐时段有

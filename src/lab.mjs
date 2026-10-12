@@ -23,11 +23,43 @@ import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, printC
 /** GitHub Pages 根地址（独立卡片页 docs/cards/<id>.html） */
 const PAGES_URL = 'https://wangwengao.github.io/mcd-secret-menu-lab';
 import { checkText, checkRecipes } from './compliance.mjs';
+import { inventRecipes } from './invent.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 
-/** lint 命令缺省扫描的文案文件（规则说明类文件本身含示例词，不在列） */
+/** lab --invent：用真实菜单自动发明图鉴之外的新吃法，输出可直接用于 card --spec 的 JSON */
+function cmdInvent(flags, context, clock) {
+  const userVibe = typeof flags.vibe === 'string' ? flags.vibe : null;
+  const options = {
+    budget: flags.budget ? Number(flags.budget) : undefined,
+    maxCalorie: flags.calorie ? Number(flags.calorie) : undefined,
+    vibe: userVibe ?? undefined,
+    count: flags.count ? Number(flags.count) : 3,
+    seed: flags.seed ? Number(flags.seed) : Date.now() % 100000,
+  };
+  const candidates = inventRecipes(context.items, context.nutrition, options);
+
+  if (flags.json) {
+    console.log(JSON.stringify({ source: context.source, now: clock.text, options, candidates: candidates.map((c) => ({ ...c.spec, price: c.price, kcal: c.kcal })) }, null, 2));
+    return;
+  }
+  console.log(bold('\n🧪 实验室 · 自动发明') + dim(`（${context.source === 'live' ? '实时菜单' : '样例快照'} · 图鉴之外的新组合 · seed ${options.seed}）\n`));
+  if (candidates.length === 0) {
+    console.log(yellow('  没有组合出符合条件的新吃法，试试放宽预算 / 热量或去掉场景。\n'));
+    return;
+  }
+  candidates.forEach(({ spec, price, kcal, mechanic }, index) => {
+    console.log(`  ${bold(`候选 ${index + 1}：${spec.emoji} ${spec.name}`)} —— ${spec.tagline}`);
+    console.log(`     原料：${spec.ingredients.join(' + ')} · 机制：${MECHANICS[mechanic] ?? mechanic}`);
+    console.log(`     估算：${fmtMoney(price ?? NaN)} · ${Number.isFinite(kcal) ? `${Math.round(kcal)} 千卡` : '热量未知'} · 场景：${spec.vibes.join('/')}`);
+    console.log(`     步骤：${spec.steps.join(' → ')}`);
+    console.log(dim(`     出卡：node src/lab.mjs card --png --spec '${JSON.stringify(spec)}'`));
+    console.log('');
+  });
+  console.log(dim('  这些是实验室按「机制 × 真实在售单品」自动组合的候选，未经图鉴收录；换一组加 --seed <数字>。\n'));
+}
+
 const DEFAULT_LINT_FILES = [
   'README.md',
   'README.en.md',
@@ -83,6 +115,8 @@ const HELP = `
   --vibe <场景>        早餐 / 正餐 / 下午茶 / 夜宵（lab，缺省按当前时段自动推断）
   --difficulty <1-3>   最高难度（lab / recipes）
   --tag <标签>         标签过滤（lab / recipes）
+  --invent             lab：用真实菜单自动发明图鉴之外的新吃法（附 card --spec 可用的 JSON）
+  --count <n> / --seed <n>   --invent 的候选数量 / 换一组
   --out <path>         card / demo 的输出路径
   --format text|md     card：只输出文本版（text 终端用；md 聊天 / Agent 回复用，不含长横线）
   --spec <json|文件>   card：为自创吃法出卡，JSON 至少含 name / ingredients / steps（供 Agent 使用）
@@ -191,6 +225,8 @@ async function cmdLab(flags) {
   const context = await loadContext(flags);
   const clock = await resolveClock(context);
   const campaigns = await resolveCampaigns(context);
+
+  if (flags.invent) return cmdInvent(flags, context, clock);
 
   const constraints = {
     budget: flags.budget ? Number(flags.budget) : undefined,
