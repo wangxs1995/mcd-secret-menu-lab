@@ -1,44 +1,56 @@
 /**
  * 价格计算
  * - 离线：按样例菜单价格求和（演示）
- * - 联网：调用麦当劳 MCP 的 calculate-price 计算含优惠的真实价格
+ * - 联网：调用麦当劳 MCP 的 calculate-price（金额单位为分，这里统一换算成元）
  */
-import { priceOf } from './recipes.mjs';
 
 /**
- * 离线小计
- * @param {Array<{ingredient: object, item: object}>} resolved
- * @param {Array|object} prices 菜单数组或 名称→价格 映射
+ * 本地小计（按数量累加）
+ * @param {Array<{ingredient: object, item: object, quantity?: number}>} resolved
  */
-export function sumPrice(resolved, prices) {
+export function sumPrice(resolved) {
   const lines = [];
   let subtotal = 0;
   let unknown = 0;
-  for (const { ingredient, item } of resolved) {
-    const price = Number.isFinite(item?.priceYuan) ? item.priceYuan : priceOf(ingredient, prices);
-    if (Number.isFinite(price)) {
-      subtotal += price;
-      lines.push({ name: item?.name ?? ingredient.name, price });
-    } else {
+  for (const { ingredient, item, quantity = 1 } of resolved) {
+    const unit = Number.isFinite(item?.priceYuan) ? item.priceYuan : null;
+    const name = `${item?.name ?? ingredient.name}${quantity > 1 ? ` ×${quantity}` : ''}`;
+    if (unit === null) {
       unknown += 1;
-      lines.push({ name: item?.name ?? ingredient.name, price: null });
+      lines.push({ name, price: null, quantity });
+    } else {
+      const price = unit * quantity;
+      subtotal += price;
+      lines.push({ name, price, quantity, originalPrice: Number.isFinite(item?.originalPrice) ? item.originalPrice * quantity : null });
     }
   }
-  return { subtotal, lines, unknown };
+  return { subtotal, lines, unknown, source: 'local' };
 }
 
 /**
- * 联网价格：调用 MCP calculate-price（含优惠券与配送费）
- * 注：参数按麦当劳 MCP 工具约定拼装；返回结构以服务器实时返回为准。
+ * 联网价格：MCP calculate-price（到店自取：orderType=1 / beType=1）
  * @param {import('./mcp-client.mjs').McdMcpClient} client
- * @param {object} params
- * @param {string} params.storeCode
- * @param {'delivery'|'pickup'} [params.diningMode]
- * @param {Array<{code: string, quantity: number}>} params.items
- * @param {string[]} [params.couponIds]
+ * @param {{storeCode: string, items: Array<{productCode: string, quantity: number}>, orderType?: number, beType?: number, beCode?: string}} params
+ * @returns {Promise<{subtotal: number, originalPrice: number, discount: number, lines: Array, takeWayList: Array, raw: object, source: 'mcp'}>}
  */
-export async function quoteViaMcp(client, { storeCode, diningMode = 'pickup', items, couponIds } = {}) {
-  const args = { storeCode, diningMode, items };
-  if (couponIds?.length) args.couponIds = couponIds;
-  return client.callToolJson('calculate-price', args);
+export async function quoteViaMcp(client, { storeCode, items, orderType = 1, beType = 1, beCode } = {}) {
+  const args = { storeCode, orderType, beType, items };
+  if (beCode) args.beCode = beCode;
+  const data = await client.callToolData('calculate-price', args);
+  const cents = (value) => (Number.isFinite(Number(value)) ? Number(value) / 100 : null);
+  return {
+    subtotal: cents(data?.price) ?? 0,
+    originalPrice: cents(data?.originalPrice) ?? 0,
+    discount: cents(data?.discount) ?? 0,
+    lines: (data?.productList ?? []).map((line) => ({
+      name: `${line.productName ?? line.productCode}${line.quantity > 1 ? ` ×${line.quantity}` : ''}`,
+      price: cents(line.subtotal),
+      originalPrice: cents(line.originalSubtotal),
+      quantity: line.quantity ?? 1,
+      productCode: line.productCode,
+    })),
+    takeWayList: Array.isArray(data?.takeWayList) ? data.takeWayList : [],
+    raw: data,
+    source: 'mcp',
+  };
 }

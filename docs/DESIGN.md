@@ -75,13 +75,19 @@
 
 | 文件 | 状态 |
 |---|---|
-| `README.md`（介绍 / 安装 / 使用示例 / 目标用户） | 计划 |
-| `CONTEST_DECLARATION.md`（官方原文，不可改动） | ✅ 已就位 |
-| `MCP_INTEGRATION.md`（Server / Tool / 调用流程 / 业务价值） | 计划 |
-| `mcp-config.example.json`（仅环境变量占位符） | ✅ 已就位 |
-| 源代码（可运行） | 进行中 |
-| `workbuddy.md`（WorkBuddy 专项奖励，非必需） | 计划 |
-| 加分项：demo 页、样例配方卡、自测脚本 | 计划 |
+| `README.md`（介绍 / 安装 / 使用示例 / 目标用户） | ✅ |
+| `CONTEST_DECLARATION.md`（官方原文，不可改动） | ✅ |
+| `MCP_INTEGRATION.md`（Server / Tool / 调用流程 / 联调证据 / 业务价值） | ✅ |
+| `mcp-config.example.json`（仅环境变量占位符） | ✅ |
+| 源代码（可运行，零依赖） | ✅ |
+| `workbuddy.md`（WorkBuddy 专项奖励，非必需） | 待补 |
+| 加分项：演示页、12 张配方卡、自测（12 个）、真实快照刷新脚本 | ✅ |
+
+## 9.1 实现状态（2026-10-10）
+
+- 已接入并联调通过的 MCP 工具：`query-nearby-stores`、`query-meals`（含 `reservationDate` 早餐时段）、`list-nutrition-foods`、`now-time-info`、`campaign-calendar`、`calculate-price`、`create-order`（按 schema 接入，默认预演）；联调验证：`query-meal-detail`、`query-store-coupons`
+- v1 聚焦到店自取（`orderType=1 / beType=1`）；外送需配送地址与 `beCode`，列入路线图
+- 离线样例为真实快照（上海某门店到店菜单 + 次日早餐菜单 + 全量营养表），由 `scripts/refresh-sample-data.mjs` 生成
 
 ## 10. 里程碑
 

@@ -117,7 +117,7 @@ export function renderCardFragment(recipe, data = {}) {
   const heat = `${'★'.repeat(recipe.heat)}${'☆'.repeat(Math.max(0, 5 - recipe.heat))}`;
   const billText = bill ? `约等于散步 ${bill.walkMin} 分钟，或慢跑 ${bill.jogMin} 分钟` : '';
   const dateText = formatDate(generatedAt);
-  const sourceText = source === 'live' ? '实时菜单' : '样例数据（演示）';
+  const sourceText = source === 'live' ? '实时菜单' : '快照（演示）';
 
   return `<article class="card">
   <div class="stamp">SECRET</div>
@@ -142,7 +142,7 @@ export function renderCardFragment(recipe, data = {}) {
     <h2>原料清单</h2>
     <table>
       ${ingredientRows}
-      <tr class="total"><td>合计（${esc(sourceText)}）</td><td class="num">${esc(fmtMoney(subtotal))}</td></tr>
+      <tr class="total"><td>合计</td><td class="num">${esc(fmtMoney(subtotal))}</td></tr>
     </table>
   </section>
   <section class="sec">
@@ -161,7 +161,7 @@ export function renderCardFragment(recipe, data = {}) {
   </section>
   <footer class="card__footer">
     ${esc(DISCLAIMER)}<br>
-    生成时间 ${esc(dateText)} · <a href="${REPO_URL}">${esc(REPO_URL.replace('https://', ''))}</a>
+    生成时间 ${esc(dateText)} · 数据来源：${esc(sourceText)} · <a href="${REPO_URL}">${esc(REPO_URL.replace('https://', ''))}</a>
   </footer>
 </article>`;
 }

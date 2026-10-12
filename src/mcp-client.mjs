@@ -16,6 +16,8 @@ const DEFAULT_ENDPOINT = 'https://mcp.mcd.cn';
 const PROTOCOL_VERSION = '2025-06-18';
 const CLIENT_INFO = { name: 'mcd-secret-menu-lab', version: '0.1.0' };
 
+import { extractJson, unwrapBusiness } from './mcp-parse.mjs';
+
 /** MCP 调用相关错误（含用户可读的中文提示） */
 export class McpError extends Error {
   constructor(message, { code = 'MCP_ERROR', httpStatus = null, detail = null } = {}) {
@@ -92,14 +94,24 @@ export class McdMcpClient {
     return { text, structured: tryJson(text), raw: result };
   }
 
-  /** 调用工具并解析 JSON 返回（麦当劳 MCP 的返回多为 JSON 文本） */
+  /** 调用工具并解析 JSON（麦当劳 MCP 的返回常为「说明文字 + JSON」混合文本，这里做容错抽取） */
   async callToolJson(name, args = {}) {
     const { text } = await this.callTool(name, args);
-    const data = tryJson(text);
+    const data = extractJson(text);
     if (data === undefined) {
-      throw new McpError(`工具 ${name} 的返回无法解析为 JSON`, { code: 'BAD_JSON', detail: text.slice(0, 300) });
+      throw new McpError(`工具 ${name} 的返回中找不到 JSON`, { code: 'BAD_JSON', detail: text.slice(0, 300) });
     }
     return data;
+  }
+
+  /** 调用工具并返回业务 data：自动校验 success / code，失败抛出可读错误 */
+  async callToolData(name, args = {}) {
+    const body = await this.callToolJson(name, args);
+    try {
+      return unwrapBusiness(body, name);
+    } catch (error) {
+      throw new McpError(error.message, { code: 'BIZ_ERROR', detail: error.detail ?? body });
+    }
   }
 
   async _ensureInitialized() {
