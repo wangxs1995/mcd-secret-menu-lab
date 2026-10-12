@@ -11,13 +11,13 @@
   <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen" alt="node">  
   <img src="https://img.shields.io/badge/dependencies-0-blue" alt="zero deps">  
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">  
-  <img src="https://img.shields.io/badge/tests-12%20passed-brightgreen" alt="tests">  
+  <img src="https://img.shields.io/badge/tests-13%20passed-brightgreen" alt="tests">  
 </p>
 
 > 薯条蘸圆筒、可乐扣冰淇淋、鸡块夹进双吉……这些在小红书上流传的「麦门隐藏吃法」，终于有了一个能**校验门店真能做、算清价格和热量、生成可晒的配方卡、一键下单**的工具。基于麦当劳官方 MCP，零依赖，没有 Token 也能完整体验。
 
 <p align="center">  
-  <a href="./README.en.md">English</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#快速开始">快速开始</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>  
+  <a href="./README.en.md">English</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#完整上手流程">完整上手</a> · <a href="#命令行快速开始">命令行</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>  
 </p>
 
 ## 这是什么？
@@ -107,7 +107,69 @@ $ node src/lab.mjs price --recipe fries-float --store 1450713
 
 所有改造动作（拆 / 夹 / 蘸 / 摇）都是你拿到餐之后自己完成，不需要门店做任何特殊处理。完整图鉴见 [`references/recipes.md`](./references/recipes.md)。
 
-## 快速开始
+## 完整上手流程
+
+从零到真的吃上一份隐藏吃法，五步，大约 10 分钟。以 WorkBuddy 为例，其他客户端只有第 2 步不同。
+
+### 第 1 步 · 注册麦当劳 MCP，拿到 Token
+
+1. 打开 [open.mcd.cn/mcp](https://open.mcd.cn/mcp)，点右上角【登录】，用手机号验证码登录
+2. 登录后右上角变成【控制台】，点开 → 点【激活】→ 阅读并同意服务协议
+3. 申请成功后一键复制 Token（32 位字符）。**Token 等同于你的账号凭证，不要发给别人、不要提交到任何仓库**
+
+官方图文指南：[麦当劳 MCP Server 使用指南](https://github.com/M-China/mcd-mcp-server)。每个 Token 每分钟最多 600 次请求。
+
+### 第 2 步 · 在 WorkBuddy 里配置 MCP 连接器
+
+1. 打开 WorkBuddy，左侧边栏【专家 · 技能 · 连接器】→ 选【连接器】页签
+2. 右上角【自定义连接器】→【配置 MCP】，粘贴下面的 JSON，把 `${MCD_MCP_TOKEN}` 换成第 1 步的 Token，点【保存】
+3. 回到【自定义连接器】，把 `mcd-mcp` 打开【启用】
+
+```json
+{
+  "mcpServers": {
+    "mcd-mcp": {
+      "type": "streamablehttp",
+      "url": "https://mcp.mcd.cn",
+      "headers": { "Authorization": "Bearer ${MCD_MCP_TOKEN}" }
+    }
+  }
+}
+```
+
+Cursor / Claude Code / VS Code / Cherry Studio 的配置模板在 [`mcp-config/`](./mcp-config/README.md)。
+
+### 第 3 步 · 安装 Skill
+
+```bash
+git clone https://github.com/wangwengao/mcd-secret-menu-lab.git
+cd mcd-secret-menu-lab
+cp .env.example .env        # 填入 MCD_MCP_TOKEN；可选再填 MCD_STORE_CODE（默认门店，见第 4 步）
+.\install.ps1               # Windows；macOS / Linux 用 bash install.sh
+node src/lab.mjs doctor     # 自检：Token / 连通性 / 35 个工具 / 服务器时间
+```
+
+安装脚本会把 Skill（连同本地 `.env`）装进 WorkBuddy 与 Claude Code 的技能目录。不想跑脚本也可以在 WorkBuddy 的【技能】页导入 [`dist/mcd-secret-menu-lab-skill.zip`](./dist/mcd-secret-menu-lab-skill.zip)，或把本仓库复制到 `~/.workbuddy/skills/mcd-secret-menu-lab/`。要求 Node.js ≥ 18，零第三方依赖。
+
+### 第 4 步 · 使用
+
+在 WorkBuddy 对话框里 @ 这个 Skill，直接说人话：
+
+- 「给我一个 30 块以内的隐藏吃法」
+- 「我在上海人民广场附近，现在是夜宵时间，来个甜咸口的」
+- 「把第一个做成配方卡」
+
+它会：按你给的城市 + 地标找门店 → 拉实时菜单校验哪些吃法今天能做 → 按预算 / 热量 / 时段筛方案 → 在回复里直接给出 Markdown 配方卡（原料与 MCP 实时价格、改造步骤、热量）→ 附在线卡片链接，或运行 `card --png` 生成图片。第一次问时告诉它你的门店（或在 `.env` 写好 `MCD_STORE_CODE`），之后就不用重复说。
+
+不用 Agent 也能玩：见下方[命令行快速开始](#命令行快速开始)。
+
+### 第 5 步 · 自助下单，或分享你的搭配
+
+**下单**：对它说「就第一个，帮我下单」→ 它先做预演（MCP 实时算价、堂食 / 外带可选）→ 你确认 → 创建订单 → 用返回的支付入口在麦当劳官方渠道完成支付 → 取餐后按改造步骤自己动手（拆 / 夹 / 蘸 / 摇）。全程不会自动扣款。
+
+**分享**：复制回复里的 Markdown 卡片，或在[在线演示页](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html)点「⬇️ 下载配方卡 PNG」，发小红书 / 朋友圈（现成文案见 [`docs/share/`](./docs/share/README.md)）。自己发明了新吃法？用 [Issue 模板](../../issues/new?template=recipe.yml)投稿，通过的会进图鉴并署名。
+
+## 命令行快速开始
 
 ```bash
 git clone https://github.com/wangwengao/mcd-secret-menu-lab.git
@@ -129,13 +191,11 @@ node src/lab.mjs order --recipe cola-float --store 1450713        # 预演（dry
 node src/lab.mjs order --recipe cola-float --store 1450713 --yes  # 真实下单
 ```
 
-要求：Node.js ≥ 18，零第三方依赖。`npm test` 运行 12 个自测。
+要求：Node.js ≥ 18，零第三方依赖。`npm test` 运行 13 个自测。
 
-## 在 Agent 里使用（WorkBuddy / Claude / Cherry Studio / Cursor）
+## 在 Agent 里对话是什么体验
 
-1. 按 [`mcp-config.example.json`](./mcp-config.example.json) 配置麦当劳 MCP 连接器，把 `${MCD_MCP_TOKEN}` 换成你的 Token
-2. 安装 Skill：`.\install.ps1`（Windows）或 `bash install.sh`（macOS / Linux）会把它装进 WorkBuddy 与 Claude Code 的技能目录；其他客户端直接加载 [`SKILL.md`](./SKILL.md)。各客户端的 MCP 配置模板见 [`mcp-config/`](./mcp-config/README.md)，也可下载 [`dist/mcd-secret-menu-lab-skill.zip`](./dist/mcd-secret-menu-lab-skill.zip) 在 GUI 里导入
-3. 对话：
+配置与安装见上面的[完整上手流程](#完整上手流程)。一段典型对话：
 
 > **你**：晚上加班想吃点不一样的，30 块以内。  
 > **Agent**：（运行 `lab --budget 30 --vibe 夜宵`）给你 3 个方案 —— 可乐浮雪 ¥14.5 / 冰雪薯条 ¥18.5 / 勇者鸡块 ¥26……要生成配方卡还是直接下单？  

@@ -44,6 +44,14 @@ $ node src/lab.mjs price --recipe fries-float --store 1450713
   取餐方式：堂食(eat-in) / 外带(locker-out)
 ```
 
+## Step by step (WorkBuddy)
+
+1. **Get a token** — sign in at [open.mcd.cn/mcp](https://open.mcd.cn/mcp) with your phone number, open the console, click "activate", copy the 32-character token. Never commit it.
+2. **Configure the MCP connector** — in WorkBuddy: sidebar "专家 · 技能 · 连接器" → "连接器" → "自定义连接器" → "配置 MCP", paste [`mcp-config/workbuddy-cherry-studio.json`](./mcp-config/workbuddy-cherry-studio.json) with your token, save and enable `mcd-mcp`. Templates for Cursor / Claude Code / VS Code are in [`mcp-config/`](./mcp-config/README.md).
+3. **Install the skill** — `git clone`, `cp .env.example .env` (token, optionally a default `MCD_STORE_CODE`), then `.\install.ps1` or `bash install.sh`; verify with `node src/lab.mjs doctor`. Or import [`dist/mcd-secret-menu-lab-skill.zip`](./dist/mcd-secret-menu-lab-skill.zip).
+4. **Use it** — ask in plain language: "a secret-menu hack under ¥30", "late-night, something sweet-and-salty near People's Square, Shanghai", "make the first one a card". The reply is a Markdown recipe card with live prices and calories, plus a card link or a generated PNG.
+5. **Order or share** — "order the first one": dry-run with live pricing → you confirm → order created → pay through McDonald's official channel, then do the hack yourself. Share the Markdown card or download the PNG from the [demo page](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html); submit your own hack via the issue template.
+
 ## Quick start
 
 ```bash
