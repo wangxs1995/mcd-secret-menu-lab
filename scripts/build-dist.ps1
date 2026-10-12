@@ -1,4 +1,4 @@
-# 打包 Skill ZIP（供 WorkBuddy 等客户端「导入技能」使用）
+﻿# 打包 Skill ZIP（供 WorkBuddy 等客户端「导入技能」使用）
 # 用法：.\scripts\build-dist.ps1   → 生成 dist/mcd-secret-menu-lab-skill.zip
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path $PSScriptRoot -Parent

@@ -1,4 +1,4 @@
-# 麦门隐藏菜单研究所 · 一键安装（Windows PowerShell）
+﻿# 麦门隐藏菜单研究所 · 一键安装（Windows PowerShell）
 # 把 Skill 复制到 WorkBuddy 与 Claude Code 的技能目录；已存在时先备份。
 # 用法：.\install.ps1   （可加 -Target workbuddy|claude|all，默认 all）
 param(
