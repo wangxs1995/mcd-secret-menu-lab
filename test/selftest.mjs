@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, rmSync } from 'node:fs';
+import { existsSync, rmSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -16,6 +16,7 @@ import { sumPrice } from '../src/pricing.mjs';
 import { renderCardHtml, printCardText } from '../src/card.mjs';
 import { parseSseForId } from '../src/mcp-client.mjs';
 import { extractJson, parseCompactTable, parseNutritionData, normalizeMenuData, parseCampaignCalendar } from '../src/mcp-parse.mjs';
+import { checkText, checkRecipes } from '../src/compliance.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const menu = loadSampleMenu();
@@ -130,6 +131,19 @@ test('SSE 解析：匹配 id / 忽略其他事件', () => {
   const sse = 'event: message\ndata: {"jsonrpc":"2.0","id":7,"result":{"ok":true}}\n\n';
   assert.equal(parseSseForId(sse, 7).result.ok, true);
   assert.equal(parseSseForId(sse, 8), null);
+});
+
+test('文案合规：配方与对外文档无歧视 / 对比 / 功效 / 绝对化用语', () => {
+  assert.deepEqual(checkRecipes(RECIPES), []);
+  const docs = ['README.md', 'README.en.md', 'references/recipes.md', 'docs/share/xiaohongshu.md', 'docs/share/zhihu-v2ex.md', 'docs/share/moments.md'];
+  for (const rel of docs) {
+    const findings = checkText(readFileSync(join(ROOT, rel), 'utf8'), { source: rel });
+    assert.deepEqual(findings, [], `${rel} 命中：${findings.map((f) => `${f.label}「${f.match}」`).join('；')}`);
+  }
+  const bad = checkText('冰火两重天，麦当劳经典的「贫民窟米其林」。');
+  assert.equal(bad.length, 1);
+  assert.equal(bad[0].rule, 'discrimination');
+  assert.equal(checkText('学生党 / 打工人的性价比之选').length, 0);
 });
 
 test('CLI 冒烟：recipes --json / lab --offline --json / card --offline', () => {

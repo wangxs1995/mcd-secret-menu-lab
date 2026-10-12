@@ -1,23 +1,23 @@
-<p align="center">
-  <img src="assets/cover.png" alt="麦门隐藏菜单研究所 · 演示页" width="880">
+<p align="center">  
+  <img src="assets/cover.png" alt="麦门隐藏菜单研究所 · 演示页" width="880">  
 </p>
 
-<h1 align="center">🍟 麦门隐藏菜单研究所</h1>
+<h1 align="center">🍟 麦门隐藏菜单研究所</h1>  
 <p align="center"><b>MCD Secret Menu Lab</b> · 用麦当劳真实在售餐品，发明、验证、下单「隐藏吃法」</p>
 
-<p align="center">
-  <a href="https://github.com/wangwengao/mcd-secret-menu-lab/stargazers"><img src="https://img.shields.io/github/stars/wangwengao/mcd-secret-menu-lab?style=social" alt="stars"></a>
-  <img src="https://img.shields.io/badge/McDonald's-MCP-c8102e" alt="McDonald's MCP">
-  <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen" alt="node">
-  <img src="https://img.shields.io/badge/dependencies-0-blue" alt="zero deps">
-  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">
-  <img src="https://img.shields.io/badge/tests-12%20passed-brightgreen" alt="tests">
+<p align="center">  
+  <a href="https://github.com/wangwengao/mcd-secret-menu-lab/stargazers"><img src="https://img.shields.io/github/stars/wangwengao/mcd-secret-menu-lab?style=social" alt="stars"></a>  
+  <img src="https://img.shields.io/badge/McDonald's-MCP-c8102e" alt="McDonald's MCP">  
+  <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen" alt="node">  
+  <img src="https://img.shields.io/badge/dependencies-0-blue" alt="zero deps">  
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">  
+  <img src="https://img.shields.io/badge/tests-12%20passed-brightgreen" alt="tests">  
 </p>
 
 > 薯条蘸圆筒、可乐扣冰淇淋、鸡块夹进双吉……这些在小红书上流传的「麦门隐藏吃法」，终于有了一个能**校验门店真能做、算清价格和热量、生成可晒的配方卡、一键下单**的工具。基于麦当劳官方 MCP，零依赖，没有 Token 也能完整体验。
 
-<p align="center">
-  <a href="./README.en.md">English</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#快速开始">快速开始</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>
+<p align="center">  
+  <a href="./README.en.md">English</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#快速开始">快速开始</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>  
 </p>
 
 ## 这是什么？
@@ -32,27 +32,31 @@
 
 **和常见做法的区别**
 
-| | 常见做法 | 本项目 |
-|---|---|---|
-| 隐藏吃法 | 社交平台截图，真假难辨 | 原料全部来自实时菜单，这家店今天能不能做一查便知 |
-| 价格 | 语言模型「估一下」 | `calculate-price` 实时算，含优惠与取餐方式 |
-| 时段 | 不区分 | 按服务器时间推断场景；早餐吃法只在早餐时段出现 |
-| 活动 | 不联动 | 读活动日历，推荐时带上当前活动 |
-| 离线体验 | 手写假数据 | 真实快照（183 个餐品 + 158 项营养），一条命令刷新 |
-| 产出物 | 一段文字 | 配方卡 PNG + 可筛选 / 随机抽取的在线页 |
+|      | 常见做法        | 本项目                            |
+| ---- | ----------- | ------------------------------ |
+| 隐藏吃法 | 社交平台截图，真假难辨 | 原料全部来自实时菜单，这家店今天能不能做一查便知       |
+| 价格   | 语言模型「估一下」   | `calculate-price` 实时算，含优惠与取餐方式 |
+| 时段   | 不区分         | 按服务器时间推断场景；早餐吃法只在早餐时段出现        |
+| 活动   | 不联动         | 读活动日历，推荐时带上当前活动                |
+| 离线体验 | 手写假数据       | 真实快照（183 个餐品 + 158 项营养），一条命令刷新 |
+| 产出物  | 一段文字        | 配方卡 PNG + 可筛选 / 随机抽取的在线页       |
 
 ## 30 秒看效果
 
-**在线演示页**（零安装，纯静态）：[wangwengao.github.io/mcd-secret-menu-lab/demo.html](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html) · 或直接打开仓库里的 [`docs/demo.html`](./docs/demo.html)
+**在线演示页**（零安装，纯静态）：[wangwengao.github.io/mcd-secret-menu-lab/demo.html](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html) · 或直接打开仓库里的 [`docs/demo.html`](./docs/demo.html)  
 按场景 / 难度筛选、搜原料、🎲「今天吃什么？随机来一道」、一键复制文字版配方——12 张配方卡全部基于真实快照。
 
-<table>
-  <tr>
-    <td align="center"><img src="assets/cards/fries-float.png" width="220"><br>🍟❄️ 冰雪薯条</td>
-    <td align="center"><img src="assets/cards/cola-float.png" width="220"><br>🥤⛷️ 可乐浮雪</td>
-    <td align="center"><img src="assets/cards/affogato.png" width="220"><br>☕🍦 鲜萃阿芙佳朵</td>
-    <td align="center"><img src="assets/cards/brave-nugget.png" width="220"><br>🍗🍧 勇者鸡块</td>
-  </tr>
+<table>  
+  <tr>  
+    <td align="center"><img src="assets/cards/fries-float.png" width="220">  
+🍟❄️ 冰雪薯条</td>  
+    <td align="center"><img src="assets/cards/cola-float.png" width="220">  
+🥤⛷️ 可乐浮雪</td>  
+    <td align="center"><img src="assets/cards/affogato.png" width="220">  
+☕🍦 鲜萃阿芙佳朵</td>  
+    <td align="center"><img src="assets/cards/brave-nugget.png" width="220">  
+🍗🍧 勇者鸡块</td>  
+  </tr>  
 </table>
 
 **真实运行记录**（联网模式，上海某门店，2026-10-10 17:12）：
@@ -86,20 +90,20 @@ $ node src/lab.mjs price --recipe fries-float --store 1450713
 
 ## 12 道隐藏吃法
 
-| | 吃法 | 一句话 | 原料 | 难度 | 场景 |
-|---|---|---|---|---|---|
-| 🍟❄️ | 冰雪薯条 | 咸与甜的第一次握手 | 薯条 + 圆筒冰淇淋 | 新手 | 下午茶 / 夜宵 |
-| 🥤⛷️ | 可乐浮雪 | 五块钱的麦乐酷平替 | 可乐 + 圆筒冰淇淋 | 新手 | 下午茶 / 正餐 |
-| 🍔🍗 | 牛鸡双吉塔 | 一口咬穿两个汉堡 | 双层吉士汉堡 + 麦香鸡 | 进阶 | 正餐 / 夜宵 |
-| 🍔🧨 | 鸡块夹击堡 | 给汉堡加装弹药 | 双层吉士汉堡 + 麦乐鸡 | 进阶 | 正餐 |
-| 🍔🍟 | 薯条夹击堡 | 把快乐夹进面包里 | 巨无霸 + 薯条 | 新手 | 正餐 / 夜宵 |
-| 🥧🔥 | 冰火菠萝派 | 三分钟搭一个甜品台 | 派（菠萝）+ 圆筒冰淇淋 | 新手 | 下午茶 |
-| ☕🍦 | 鲜萃阿芙佳朵 | 比官方阿芙佳朵更大杯的 DIY 版 | 鲜萃咖啡 + 圆筒冰淇淋 | 新手 | 下午茶 |
-| 🍟🎵 | 酸甜摇摇薯 | 不用摇摇粉也能摇 | 薯条 + 麦乐鸡（的酱） | 新手 | 下午茶 / 夜宵 |
-| 🌅🍳 | 薯饼夹击堡 | 早八人的加装包 | 猪柳蛋麦满分 + 脆薯饼 | 新手 | 早餐 |
-| 🌅🥖 | 豆浆泡油条 | 中式早点的麦记解法 | 脆香油条 + 优品豆浆 + 美式 | 新手 | 早餐 |
-| 🍗🍧 | 勇者鸡块 | 甜咸党的终极试炼 | 麦乐鸡 + 新地（草莓） | 地狱 | 下午茶 / 夜宵 |
-| 💰✨ | 1+1 魔法组合 | 两套随心配拼出一个四件套 | 随心配 1+1 ×2 | 新手 | 正餐 / 夜宵 |
+|      | 吃法       | 一句话               | 原料               | 难度 | 场景       |
+| ---- | -------- | ----------------- | ---------------- | -- | -------- |
+| 🍟❄️ | 冰雪薯条     | 咸与甜的第一次握手         | 薯条 + 圆筒冰淇淋       | 新手 | 下午茶 / 夜宵 |
+| 🥤⛷️ | 可乐浮雪     | 五块钱的麦乐酷平替         | 可乐 + 圆筒冰淇淋       | 新手 | 下午茶 / 正餐 |
+| 🍔🍗 | 牛鸡双吉塔    | 一口咬穿两个汉堡          | 双层吉士汉堡 + 麦香鸡     | 进阶 | 正餐 / 夜宵  |
+| 🍔🧨 | 鸡块夹击堡    | 给汉堡加装弹药           | 双层吉士汉堡 + 麦乐鸡     | 进阶 | 正餐       |
+| 🍔🍟 | 薯条夹击堡    | 把快乐夹进面包里          | 巨无霸 + 薯条         | 新手 | 正餐 / 夜宵  |
+| 🥧🔥 | 冰火菠萝派    | 三分钟搭一个甜品台         | 派（菠萝）+ 圆筒冰淇淋     | 新手 | 下午茶      |
+| ☕🍦  | 鲜萃阿芙佳朵   | 比官方阿芙佳朵更大杯的 DIY 版 | 鲜萃咖啡 + 圆筒冰淇淋     | 新手 | 下午茶      |
+| 🍟🎵 | 酸甜摇摇薯    | 不用摇摇粉也能摇          | 薯条 + 麦乐鸡（的酱）     | 新手 | 下午茶 / 夜宵 |
+| 🌅🍳 | 薯饼夹击堡    | 早八人的加装包           | 猪柳蛋麦满分 + 脆薯饼     | 新手 | 早餐       |
+| 🌅🥖 | 豆浆泡油条    | 中式早点的麦记解法         | 脆香油条 + 优品豆浆 + 美式 | 新手 | 早餐       |
+| 🍗🍧 | 勇者鸡块     | 甜咸党的终极试炼          | 麦乐鸡 + 新地（草莓）     | 地狱 | 下午茶 / 夜宵 |
+| 💰✨  | 1+1 魔法组合 | 两套随心配拼出一个四件套      | 随心配 1+1 ×2       | 新手 | 正餐 / 夜宵  |
 
 所有改造动作（拆 / 夹 / 蘸 / 摇）都是你拿到餐之后自己完成，不需要门店做任何特殊处理。完整图鉴见 [`references/recipes.md`](./references/recipes.md)。
 
@@ -133,26 +137,27 @@ node src/lab.mjs order --recipe cola-float --store 1450713 --yes  # 真实下单
 2. 安装 Skill：`.\install.ps1`（Windows）或 `bash install.sh`（macOS / Linux）会把它装进 WorkBuddy 与 Claude Code 的技能目录；其他客户端直接加载 [`SKILL.md`](./SKILL.md)。各客户端的 MCP 配置模板见 [`mcp-config/`](./mcp-config/README.md)，也可下载 [`dist/mcd-secret-menu-lab-skill.zip`](./dist/mcd-secret-menu-lab-skill.zip) 在 GUI 里导入
 3. 对话：
 
-> **你**：晚上加班想吃点不一样的，30 块以内。
-> **Agent**：（运行 `lab --budget 30 --vibe 夜宵`）给你 3 个方案 —— 可乐浮雪 ¥14.5 / 冰雪薯条 ¥18.5 / 勇者鸡块 ¥26……要生成配方卡还是直接下单？
-> **你**：第一个，下单。
+> **你**：晚上加班想吃点不一样的，30 块以内。  
+> **Agent**：（运行 `lab --budget 30 --vibe 夜宵`）给你 3 个方案 —— 可乐浮雪 ¥14.5 / 冰雪薯条 ¥18.5 / 勇者鸡块 ¥26……要生成配方卡还是直接下单？  
+> **你**：第一个，下单。  
 > **Agent**：（`order` 预演 → 你确认 → `--yes`）订单已创建，支付链接在这里；记得先喝两口可乐再放圆筒 😉
 
 Skill 支持两种模式：**模式 A** 调用本仓库 CLI（推荐，价格与营养由确定性代码计算）；**模式 B** 直接编排 MCP 工具（`query-nearby-stores → query-meals → query-meal-detail → list-nutrition-foods → calculate-price → create-order`），详见 `SKILL.md`。
 
 ## 命令总览
 
-| 命令 | 作用 | 需要 Token |
-|---|---|---|
-| `recipes` | 隐藏吃法图鉴（`--vibe` / `--tag` / `--difficulty` / `--json`） | 否 |
-| `menu` | 门店菜单 + 今日可做的吃法（`--store`） | 联网时需要，否则用快照 |
-| `lab` | 按预算 / 热量 / 场景筛方案；联网时自动按服务器时间推断时段并联动活动日历 | 同上 |
-| `card` | 生成配方卡 HTML（`--format text` 只输出文本） | 同上 |
-| `price` | 实时算价（含优惠、取餐方式） | 是 |
-| `order` | 下单（默认预演，`--yes` 真实下单，`--takeway eat-in/locker-out`） | 是 |
-| `stores` | 查询门店（`--city` + `--keyword`） | 是 |
-| `demo` | 重新生成 `docs/demo.html` | 否 |
-| `doctor` | 环境自检 | 是 |
+| 命令        | 作用                                                     | 需要 Token    |
+| --------- | ------------------------------------------------------ | ----------- |
+| `recipes` | 隐藏吃法图鉴（`--vibe` / `--tag` / `--difficulty` / `--json`） | 否           |
+| `menu`    | 门店菜单 + 今日可做的吃法（`--store`）                              | 联网时需要，否则用快照 |
+| `lab`     | 按预算 / 热量 / 场景筛方案；联网时自动按服务器时间推断时段并联动活动日历                | 同上          |
+| `card`    | 生成配方卡 HTML（`--format text` 只输出文本）                      | 同上          |
+| `price`   | 实时算价（含优惠、取餐方式）                                         | 是           |
+| `order`   | 下单（默认预演，`--yes` 真实下单，`--takeway eat-in/locker-out`）    | 是           |
+| `stores`  | 查询门店（`--city` + `--keyword`）                           | 是           |
+| `demo`    | 重新生成 `docs/demo.html`                                  | 否           |
+| `doctor`  | 环境自检                                                   | 是           |
+| `lint`    | 文案合规自检：歧视 / 贬低、品牌对比、功效宣称、迷信、绝对化用语（`--text` / `--file`，缺省扫描仓库文档与全部配方） | 否 |
 
 所有命令支持 `--json`（便于 Agent 解析）与 `--offline`（强制用快照）。
 
@@ -174,12 +179,12 @@ flowchart LR
 
 ## 目标用户
 
-| 用户 | 场景 |
-|---|---|
-| 麦门信徒 / 爱尝鲜的年轻人 | 想试新吃法，但想先知道这家店今天能不能做、要多少钱 |
-| 内容创作者 | 一键出配方卡，直接当小红书 / 朋友圈素材 |
-| 学生党 / 打工人 | 预算 30 以内吃得有意思（1+1 魔法组合、可乐浮雪） |
-| 用 Agent 点餐的人 | 把「来个隐藏吃法」变成一句话的事 |
+| 用户             | 场景                           |
+| -------------- | ---------------------------- |
+| 麦门信徒 / 爱尝鲜的年轻人 | 想试新吃法，但想先知道这家店今天能不能做、要多少钱    |
+| 内容创作者          | 一键出配方卡，直接当小红书 / 朋友圈素材        |
+| 学生党 / 打工人      | 预算 30 以内吃得有意思（1+1 魔法组合、可乐浮雪） |
+| 用 Agent 点餐的人   | 把「来个隐藏吃法」变成一句话的事             |
 
 ## 数据与诚实说明
 
@@ -201,8 +206,9 @@ mcd-secret-menu-lab/
 ├── mcp-config.example.json      # MCP 配置模板（仅环境变量占位符）
 ├── .env.example                 # Token 配置模板
 ├── src/
-│   ├── lab.mjs                  # CLI 入口（recipes / menu / lab / card / price / order / stores / demo / doctor）
+│   ├── lab.mjs                  # CLI 入口（recipes / menu / lab / card / price / order / stores / demo / doctor / lint）
 │   ├── mcp-client.mjs           # 零依赖 MCP Streamable HTTP 客户端
+│   ├── compliance.mjs           # 文案合规自检（lint 命令与测试共用）
 │   ├── mcp-parse.mjs            # 真实返回解析（说明文字 + JSON / 紧凑表格 / 菜单 / 活动日历）
 │   ├── recipes.mjs              # 12 道隐藏吃法知识库 + 匹配 / 校验 / 筛选
 │   ├── nutrition.mjs            # 营养累加 + 热量账单
@@ -246,6 +252,8 @@ mcd-secret-menu-lab/
 - **没有 Token 能用吗？** 能。所有命令自动降级为真实快照；只有 `price` / `order` / `stores` / `doctor` 需要联网。
 - **为什么早餐吃法显示「缺」？** 早餐单品只在早餐时段上架。联网时按服务器时间判断；离线快照已合并次日早餐菜单。
 - **价格为什么和我看到的不一样？** 离线显示快照价；联网时以 `calculate-price` 实时结果为准，门店、时段、优惠都会影响。
+
+
 - **会不会替我付款？** 不会。`create-order` 只创建订单并返回支付入口，支付在麦当劳官方渠道完成；而且必须显式加 `--yes`。
 - **能加我自己的吃法吗？** 能，用 Issue 模板投稿，或按 [CONTRIBUTING.md](./CONTRIBUTING.md) 提 PR。
 

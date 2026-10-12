@@ -20,6 +20,20 @@ import { sumNutrition, mealBill } from './nutrition.mjs';
 import { sumPrice, quoteViaMcp } from './pricing.mjs';
 import { normalizeMenuData, parseNutritionData, parseCampaignCalendar } from './mcp-parse.mjs';
 import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, writeFileEnsured } from './card.mjs';
+import { checkText, checkRecipes } from './compliance.mjs';
+import { readFileSync } from 'node:fs';
+
+/** lint 命令缺省扫描的文案文件（规则说明类文件本身含示例词，不在列） */
+const DEFAULT_LINT_FILES = [
+  'README.md',
+  'README.en.md',
+  'CHANGELOG.md',
+  'references/recipes.md',
+  'docs/share/README.md',
+  'docs/share/xiaohongshu.md',
+  'docs/share/zhihu-v2ex.md',
+  'docs/share/moments.md',
+];
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -50,11 +64,13 @@ const HELP = `
   stores    查询可点餐门店（联网，--city + --keyword）
   demo      生成演示页（docs/demo.html）
   doctor    环境自检（Token / 连通性 / 工具列表）
+  lint      文案合规自检（歧视 / 贬低、品牌对比、功效宣称、迷信、绝对化用语）
 
 常用选项：
   --offline            强制使用内置样例数据（无需 Token）
   --json               以 JSON 输出（便于脚本 / Agent 调用）
   --debug              打印 MCP 请求细节
+  --text <文案>        lint：检查一段文案；--file <路径> 检查文件；都不传则扫描仓库文档与全部配方
   --store <code>       门店编码（联网菜单 / 算价 / 下单需要；用 stores 命令查询）
   --recipe <id>        隐藏吃法 id（见 recipes 命令）
   --budget <元>        预算上限（lab）
@@ -97,6 +113,8 @@ async function main() {
       return cmdDemo(flags);
     case 'doctor':
       return cmdDoctor(flags);
+    case 'lint':
+      return cmdLint(flags);
     case 'help':
     case undefined:
       console.log(HELP);
@@ -401,6 +419,45 @@ async function cmdDoctor(flags) {
 }
 
 /* ---------------- 数据装载 ---------------- */
+
+function cmdLint(flags) {
+  let findings = [];
+  let scope = '';
+  if (typeof flags.text === 'string') {
+    findings = checkText(flags.text, { source: '--text' });
+    scope = '一段文案';
+  } else if (typeof flags.file === 'string') {
+    findings = checkText(readFileSync(resolve(flags.file), 'utf8'), { source: flags.file });
+    scope = flags.file;
+  } else {
+    findings = checkRecipes(RECIPES);
+    for (const rel of DEFAULT_LINT_FILES) {
+      try {
+        findings.push(...checkText(readFileSync(join(ROOT, rel), 'utf8'), { source: rel }));
+      } catch {
+        /* 文件不存在则跳过 */
+      }
+    }
+    scope = `${RECIPES.length} 道配方 + ${DEFAULT_LINT_FILES.length} 个文档`;
+  }
+
+  if (flags.json) {
+    console.log(JSON.stringify({ scope, findings }, null, 2));
+    process.exitCode = findings.length > 0 ? 1 : 0;
+    return;
+  }
+  if (findings.length === 0) {
+    console.log(green(`\n✅ 文案合规自检通过（${scope}）：未发现歧视 / 贬低、品牌对比、功效宣称、迷信、绝对化用语\n`));
+    return;
+  }
+  console.log(red(`\n❌ 发现 ${findings.length} 处需要修改（${scope}）：\n`));
+  for (const finding of findings) {
+    console.log(`  [${finding.label}] ${finding.source}：…${finding.context}…`);
+    console.log(dim(`     命中「${finding.match}」· ${finding.hint}`));
+  }
+  console.log('');
+  process.exitCode = 1;
+}
 
 /**
  * 装载菜单与营养：有 Token 且未指定 --offline 时走实时 MCP，否则用样例快照
