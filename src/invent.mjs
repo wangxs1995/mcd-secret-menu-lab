@@ -33,7 +33,7 @@ const PAIR_RULES = [
   ['hashbrown', 'icecream', 'ice', '冰火{a}', '外热内冰的三明治', ['冰火两重天', '早八回魂'], ['早餐', '下午茶'], 3],
   ['pie', 'icecream', 'ice', '冰火{a}', '三分钟搭一个甜品台', ['冰火两重天', '甜品控'], ['下午茶'], 3],
   ['drink', 'icecream', 'pour', '{a}浮雪', '一杯{a}的浮雪版', ['平替魔法', '冰爽'], ['下午茶', '正餐'], 2],
-  ['coffee', 'icecream', 'pour', '{a}阿芙佳朵', '自己搭的阿芙佳朵', ['高级感', '甜品控'], ['下午茶'], 2],
+  ['coffee', 'icecream', 'pour', '{a}阿芙佳朵', '自己搭的阿芙佳朵', ['高级感', '甜品控'], ['下午茶'], 2, 'affogato'],
   ['burger', 'fries', 'stack', '{b}夹击{a}', '把{b}藏进面包里', ['碳水叠碳水', '全网经典'], ['正餐', '夜宵'], 2],
   ['burger', 'nugget', 'stack', '{b}夹击{a}', '给{a}加装弹药', ['加量流', '饱腹'], ['正餐'], 2],
   ['muffin', 'hashbrown', 'stack', '{b}夹击{a}', '早八人的加装包', ['早餐限定', '加量流'], ['早餐'], 2],
@@ -46,9 +46,10 @@ const STEPS = {
   stack: (a, b) => [`打开${a}的上层面包`, `把${b}平铺进去，压一压`, `合上，大口咬到底`],
   pour: (a, b) => [`先喝两口${a}腾出空间`, `把${b}倒扣进${a}里`, `用吸管戳碎搅匀`],
   ice: (a, b) => [`把热${a}掰开`, `把${b}扣在${a}上`, `等 10 秒，冰火交界处口感正好`],
+  affogato: (a, b) => [`点一杯${a}和一个${b}`, `把${b}的冰淇淋刮进咖啡杯，或把${a}浇上去`, `等边缘微微融化，勺子挖着吃`],
 };
 
-const EMOJI = { dip: '🍟🍦', stack: '🍔🧨', pour: '🥤⛷️', ice: '🥧🔥' };
+const EMOJI = { dip: '🍟🍦', stack: '🍔🧨', pour: '🥤⛷️', ice: '🥧🔥', affogato: '☕🍦' };
 
 /** 短名：去掉品牌符号与规格，用于命名 */
 function shortName(name) {
@@ -120,7 +121,7 @@ export function inventRecipes(items, nutrition, { budget, maxCalorie, vibe, coun
   const candidates = [];
   const seen = new Set();
   for (const [ruleIndex, rule] of PAIR_RULES.entries()) {
-    const [roleA, roleB, mechanic, nameTpl, taglineTpl, tags, vibes, contrast] = rule;
+    const [roleA, roleB, mechanic, nameTpl, taglineTpl, tags, vibes, contrast, stepsKey = mechanic] = rule;
     for (const a of byRole[roleA] ?? []) {
       for (const b of byRole[roleB] ?? []) {
         if (a.code === b.code) continue;
@@ -140,10 +141,10 @@ export function inventRecipes(items, nutrition, { budget, maxCalorie, vibe, coun
         const sb = shortName(b.name);
         const name = nameTpl.replace('{a}', sa).replace('{b}', sb);
         const tagline = taglineTpl.replace('{a}', sa).replace('{b}', sb);
-        const steps = STEPS[mechanic](sa, sb);
+        const steps = STEPS[stepsKey](sa, sb);
         const spec = {
           name,
-          emoji: EMOJI[mechanic] ?? '🍟',
+          emoji: EMOJI[stepsKey] ?? EMOJI[mechanic] ?? '🍟',
           tagline,
           mechanic,
           ingredients: [a.name, b.name],
