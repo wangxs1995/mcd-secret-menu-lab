@@ -1,0 +1,29 @@
+{
+  "name": "mcd-secret-menu-lab",
+  "version": "0.1.0",
+  "description": "麦门隐藏菜单研究所 —— 用麦当劳真实在售餐品发明、验证、下单隐藏吃法",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "mcd-lab": "src/lab.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "menu": "node src/lab.mjs menu",
+    "lab": "node src/lab.mjs lab",
+    "card": "node src/lab.mjs card",
+    "demo": "node src/lab.mjs demo",
+    "doctor": "node src/lab.mjs doctor",
+    "test": "node --test test/selftest.mjs"
+  },
+  "keywords": [
+    "mcdonalds",
+    "mcp",
+    "skill",
+    "agent",
+    "secret-menu"
+  ],
+  "license": "MIT"
+}
