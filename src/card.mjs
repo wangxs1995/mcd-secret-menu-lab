@@ -13,6 +13,8 @@ import { nutritionLine, NUTRITION_DISCLAIMER } from './nutrition.mjs';
 import { fmtMoney } from './util.mjs';
 
 export const REPO_URL = 'https://github.com/wangwengao/mcd-secret-menu-lab';
+/** 静态资源（配方卡 PNG）的直链根地址 */
+export const ASSET_BASE = 'https://raw.githubusercontent.com/wangwengao/mcd-secret-menu-lab/main';
 
 const DISCLAIMER =
   '本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。';
@@ -192,6 +194,7 @@ export function renderCardPage(recipes, dataMap = {}, { title = '麦门隐藏菜
 ${renderCardFragment(recipe, data)}
 <div class="slot__actions">
   <button type="button" class="btn btn--ghost" data-copy="${esc(recipe.id)}">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="${ASSET_BASE}/assets/cards/${esc(recipe.id)}.png" target="_blank" rel="noopener">⬇️ 下载配方卡 PNG</a>
   <a class="btn btn--ghost" href="${REPO_URL}#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
 </div>
 <textarea class="slot__text" aria-hidden="true">${esc(printCardText(recipe, data))}</textarea>
@@ -303,6 +306,57 @@ ${slots}
   apply();
 })();
 </script>
+</body>
+</html>
+`;
+}
+
+/** 社交预览图模板（1280×640）：由 demo 命令生成到 docs/social.html，再用无头浏览器截图为 assets/social-preview.png */
+export function renderSocialPage(recipes, dataMap = {}) {
+  const cards = recipes
+    .slice(0, 2)
+    .map((recipe) => renderCardFragment(recipe, dataMap[recipe.id] ?? {}))
+    .join('\n');
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>social preview · 麦门隐藏菜单研究所</title>
+<style>
+:root{--paper:#f6efdc;--ink:#232a21;--muted:#6b7263;--red:#c8102e;--gold:#e8a800;--green:#2e4a34;--line:#d8cfb6;}
+*{box-sizing:border-box;margin:0;}
+body{width:1280px;height:640px;overflow:hidden;background:#20301f;background-image:linear-gradient(rgba(246,239,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(246,239,220,.05) 1px,transparent 1px);background-size:26px 26px;color:var(--paper);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;align-items:center;padding:0 60px;gap:20px;}
+.left{flex:1;}
+.kicker{font-family:ui-monospace,Consolas,monospace;letter-spacing:.4em;color:var(--gold);font-size:16px;margin-bottom:18px;}
+.left h1{font-size:64px;letter-spacing:.04em;line-height:1.1;margin-bottom:14px;}
+.sub{font-size:24px;color:#cfd6c6;line-height:1.5;margin-bottom:26px;}
+.stats{display:flex;gap:12px;flex-wrap:wrap;}
+.stat{border:1.5px solid rgba(246,239,220,.35);border-radius:999px;padding:8px 16px;font-size:17px;}
+.stat b{color:var(--gold);}
+.url{margin-top:30px;font-family:ui-monospace,Consolas,monospace;font-size:18px;color:#9aa892;}
+.right{position:relative;width:560px;height:640px;flex:none;}
+.right .card{position:absolute;top:50%;left:0;width:420px;transform-origin:center;}
+.right .card:nth-of-type(1){transform:translateY(-50%) scale(.6) rotate(-4deg);}
+.right .card:nth-of-type(2){left:220px;transform:translateY(-46%) scale(.6) rotate(3deg);}
+${CARD_CSS}
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="kicker">SECRET MENU LAB</div>
+    <h1>麦门隐藏菜单<br>研究所</h1>
+    <div class="sub">用麦当劳真实在售餐品组合隐藏吃法<br>校验门店可做 · 实时算价 · 配方卡 · 一键下单</div>
+    <div class="stats">
+      <span class="stat"><b>12</b> 道隐藏吃法</span>
+      <span class="stat"><b>10</b> 个 MCP 工具</span>
+      <span class="stat"><b>0</b> 依赖</span>
+      <span class="stat">基于麦当劳官方 MCP</span>
+    </div>
+    <div class="url">${esc(REPO_URL.replace('https://', ''))}</div>
+  </div>
+  <div class="right">
+${cards}
+  </div>
 </body>
 </html>
 `;

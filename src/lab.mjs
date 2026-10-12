@@ -19,7 +19,7 @@ import { loadSampleMenu, loadSampleNutrition } from './sample.mjs';
 import { sumNutrition, mealBill } from './nutrition.mjs';
 import { sumPrice, quoteViaMcp } from './pricing.mjs';
 import { normalizeMenuData, parseNutritionData, parseCampaignCalendar } from './mcp-parse.mjs';
-import { renderCardHtml, renderCardPage, printCardText, writeFileEnsured } from './card.mjs';
+import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, writeFileEnsured } from './card.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -365,6 +365,9 @@ async function cmdDemo(flags) {
     }),
   );
   console.log(green(`✅ 演示页已生成 → ${out}`));
+  const social = join(ROOT, 'docs', 'social.html');
+  writeFileEnsured(social, renderSocialPage(RECIPES, dataMap));
+  console.log(green(`✅ 社交预览模板已生成 → ${social}`) + dim('（1280×640，截图后作为仓库 Social preview）'));
 }
 
 async function cmdDoctor(flags) {

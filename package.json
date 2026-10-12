@@ -1,6 +1,6 @@
 {
   "name": "mcd-secret-menu-lab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "麦门隐藏菜单研究所 —— 用麦当劳真实在售餐品发明、验证、下单隐藏吃法",
   "type": "module",
   "private": true,

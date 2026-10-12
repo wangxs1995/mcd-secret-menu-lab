@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>social preview · 麦门隐藏菜单研究所</title>
+<style>
+:root{--paper:#f6efdc;--ink:#232a21;--muted:#6b7263;--red:#c8102e;--gold:#e8a800;--green:#2e4a34;--line:#d8cfb6;}
+*{box-sizing:border-box;margin:0;}
+body{width:1280px;height:640px;overflow:hidden;background:#20301f;background-image:linear-gradient(rgba(246,239,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(246,239,220,.05) 1px,transparent 1px);background-size:26px 26px;color:var(--paper);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;align-items:center;padding:0 60px;gap:20px;}
+.left{flex:1;}
+.kicker{font-family:ui-monospace,Consolas,monospace;letter-spacing:.4em;color:var(--gold);font-size:16px;margin-bottom:18px;}
+.left h1{font-size:64px;letter-spacing:.04em;line-height:1.1;margin-bottom:14px;}
+.sub{font-size:24px;color:#cfd6c6;line-height:1.5;margin-bottom:26px;}
+.stats{display:flex;gap:12px;flex-wrap:wrap;}
+.stat{border:1.5px solid rgba(246,239,220,.35);border-radius:999px;padding:8px 16px;font-size:17px;}
+.stat b{color:var(--gold);}
+.url{margin-top:30px;font-family:ui-monospace,Consolas,monospace;font-size:18px;color:#9aa892;}
+.right{position:relative;width:560px;height:640px;flex:none;}
+.right .card{position:absolute;top:50%;left:0;width:420px;transform-origin:center;}
+.right .card:nth-of-type(1){transform:translateY(-50%) scale(.6) rotate(-4deg);}
+.right .card:nth-of-type(2){left:220px;transform:translateY(-46%) scale(.6) rotate(3deg);}
+
+.card{width:420px;max-width:100%;background:var(--paper);border-radius:14px;padding:22px 22px 16px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
+.card::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(46,74,52,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(46,74,52,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none;}
+.card__header{display:flex;justify-content:space-between;gap:8px;font-family:ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;border-bottom:1.5px dashed var(--line);padding-bottom:10px;}
+.stamp{position:absolute;top:46px;right:-30px;transform:rotate(12deg);border:2px solid var(--red);color:var(--red);font-weight:800;letter-spacing:.3em;padding:6px 36px;opacity:.72;font-size:12px;}
+.hero{margin-top:14px;display:flex;gap:12px;align-items:flex-start;}
+.hero .emoji{font-size:40px;line-height:1;}
+.hero h1{font-size:26px;letter-spacing:.02em;margin:0;}
+.tagline{color:var(--muted);margin-top:4px;font-size:13px;}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0;}
+.chip{font-size:11px;border:1px solid var(--line);background:rgba(255,255,255,.5);padding:3px 8px;border-radius:999px;}
+.chip--red{border-color:var(--red);color:var(--red);}
+.sec{margin-top:14px;}
+.sec h2{font-size:11px;letter-spacing:.18em;color:var(--green);border-left:3px solid var(--gold);padding-left:6px;margin:0 0 8px;}
+.card table{width:100%;font-size:13px;border-collapse:collapse;}
+.card td{padding:4px 0;border-bottom:1px dotted var(--line);}
+td.num{text-align:right;font-family:ui-monospace,Consolas,monospace;white-space:nowrap;}
+tr.total td{font-weight:700;border-bottom:none;}
+ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
+.stats{display:flex;gap:14px;flex-wrap:wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px;align-items:baseline;}
+.stats b{font-size:15px;}
+.bill{font-size:12px;color:var(--muted);margin-top:6px;}
+.story{font-size:12.5px;color:#4a5244;line-height:1.7;margin:0;}
+.tip{font-size:12.5px;background:rgba(255,255,255,.45);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin-top:8px;}
+.card__footer{margin-top:14px;border-top:1.5px dashed var(--line);padding-top:10px;font-size:10.5px;color:var(--muted);line-height:1.6;}
+.card__footer a{color:var(--green);}
+
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="kicker">SECRET MENU LAB</div>
+    <h1>麦门隐藏菜单<br>研究所</h1>
+    <div class="sub">用麦当劳真实在售餐品组合隐藏吃法<br>校验门店可做 · 实时算价 · 配方卡 · 一键下单</div>
+    <div class="stats">
+      <span class="stat"><b>12</b> 道隐藏吃法</span>
+      <span class="stat"><b>10</b> 个 MCP 工具</span>
+      <span class="stat"><b>0</b> 依赖</span>
+      <span class="stat">基于麦当劳官方 MCP</span>
+    </div>
+    <div class="url">github.com/wangwengao/mcd-secret-menu-lab</div>
+  </div>
+  <div class="right">
+<article class="card">
+  <div class="stamp">SECRET</div>
+  <header class="card__header">
+    <span>Secret Menu Lab · 机密档案</span>
+    <span>No.SML-9009</span>
+  </header>
+  <div class="hero">
+    <div class="emoji">🍟❄️</div>
+    <div>
+      <h1>冰雪薯条</h1>
+      <div class="tagline">咸与甜的第一次握手</div>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="chip chip--red">新手友好</span>
+    <span class="chip">机制 · 蘸</span>
+    <span class="chip">下午茶 / 夜宵</span>
+    <span class="chip">麦门热度 ★★★★★</span>
+  </div>
+  <section class="sec">
+    <h2>原料清单</h2>
+    <table>
+      <tr><td>薯条</td><td class="num">¥13.5</td></tr><tr><td>圆筒冰淇淋</td><td class="num">¥5.0</td></tr>
+      <tr class="total"><td>合计</td><td class="num">¥18.5</td></tr>
+    </table>
+  </section>
+  <section class="sec">
+    <h2>改造步骤</h2>
+    <ol class="steps"><li>点一份现炸薯条和一个圆筒冰淇淋</li><li>捏住薯条根部，旋转蘸取冰淇淋</li><li>趁冰淇淋没化，三秒内入口</li></ol>
+  </section>
+  <section class="sec">
+    <h2>营养快照</h2>
+    <div class="stats"><span><b>382</b> 千卡</span><span>蛋白质 <b>6</b>g</span><span>脂肪 <b>15</b>g</span><span>钠 <b>201</b>mg</span></div>
+    <div class="bill">🔥 热量账单：约等于散步 95 分钟，或慢跑 40 分钟（估算，仅供参考）</div>
+  </section>
+  <section class="sec">
+    <h2>麦门笔记</h2>
+    <p class="story">从海外论坛火到小红书的入门级隐藏吃法，麦门信徒的第一课。</p>
+    <div class="tip">💡 薯条要现炸的，冰淇淋用圆筒比新地更好蘸。</div>
+  </section>
+  <footer class="card__footer">
+    本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
+    生成时间 2026.10.12 09:21 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+  </footer>
+</article>
+<article class="card">
+  <div class="stamp">SECRET</div>
+  <header class="card__header">
+    <span>Secret Menu Lab · 机密档案</span>
+    <span>No.SML-9735</span>
+  </header>
+  <div class="hero">
+    <div class="emoji">🥤⛷️</div>
+    <div>
+      <h1>可乐浮雪</h1>
+      <div class="tagline">五块钱的麦乐酷平替</div>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="chip chip--red">新手友好</span>
+    <span class="chip">机制 · 倒</span>
+    <span class="chip">下午茶 / 正餐</span>
+    <span class="chip">麦门热度 ★★★★☆</span>
+  </div>
+  <section class="sec">
+    <h2>原料清单</h2>
+    <table>
+      <tr><td>可乐</td><td class="num">¥9.5</td></tr><tr><td>圆筒冰淇淋</td><td class="num">¥5.0</td></tr>
+      <tr class="total"><td>合计</td><td class="num">¥14.5</td></tr>
+    </table>
+  </section>
+  <section class="sec">
+    <h2>改造步骤</h2>
+    <ol class="steps"><li>先喝两口可乐腾出空间</li><li>把整个圆筒倒扣进可乐里</li><li>用吸管戳碎搅匀，得到一杯浮雪</li></ol>
+  </section>
+  <section class="sec">
+    <h2>营养快照</h2>
+    <div class="stats"><span><b>240</b> 千卡</span><span>蛋白质 <b>2</b>g</span><span>脂肪 <b>3</b>g</span><span>钠 <b>36</b>mg</span></div>
+    <div class="bill">🔥 热量账单：约等于散步 60 分钟，或慢跑 25 分钟（估算，仅供参考）</div>
+  </section>
+  <section class="sec">
+    <h2>麦门笔记</h2>
+    <p class="story">麦当劳早年卖过「麦乐酷」（可乐 + 冰淇淋），如今自己动手就能复刻。</p>
+    <div class="tip">💡 先喝两口再放圆筒，不然一定会溢出来。</div>
+  </section>
+  <footer class="card__footer">
+    本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
+    生成时间 2026.10.12 09:21 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+  </footer>
+</article>
+  </div>
+</body>
+</html>

@@ -11,9 +11,14 @@
   <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen" alt="node">
   <img src="https://img.shields.io/badge/dependencies-0-blue" alt="zero deps">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">
+  <img src="https://img.shields.io/badge/tests-12%20passed-brightgreen" alt="tests">
 </p>
 
 > 薯条蘸圆筒、可乐扣冰淇淋、鸡块夹进双吉……这些在小红书上流传的「麦门隐藏吃法」，终于有了一个能**校验门店真能做、算清价格和热量、生成可晒的配方卡、一键下单**的工具。基于麦当劳官方 MCP，零依赖，没有 Token 也能完整体验。
+
+<p align="center">
+  <a href="./README.en.md">English</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#快速开始">快速开始</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>
+</p>
 
 ## 这是什么？
 
@@ -25,9 +30,21 @@
 - **配方卡**：生成「机密档案」风格的卡片，截图就能发小红书 / 朋友圈
 - **下单**：MCP 实时算价（含优惠），确认后一键创建订单
 
+**和常见做法的区别**
+
+| | 常见做法 | 本项目 |
+|---|---|---|
+| 隐藏吃法 | 社交平台截图，真假难辨 | 原料全部来自实时菜单，这家店今天能不能做一查便知 |
+| 价格 | 语言模型「估一下」 | `calculate-price` 实时算，含优惠与取餐方式 |
+| 时段 | 不区分 | 按服务器时间推断场景；早餐吃法只在早餐时段出现 |
+| 活动 | 不联动 | 读活动日历，推荐时带上当前活动 |
+| 离线体验 | 手写假数据 | 真实快照（183 个餐品 + 158 项营养），一条命令刷新 |
+| 产出物 | 一段文字 | 配方卡 PNG + 可筛选 / 随机抽取的在线页 |
+
 ## 30 秒看效果
 
-**在线演示页**（12 张配方卡，基于真实快照）：[wangwengao.github.io/mcd-secret-menu-lab/demo.html](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html) · 或直接打开仓库里的 [`docs/demo.html`](./docs/demo.html)
+**在线演示页**（零安装，纯静态）：[wangwengao.github.io/mcd-secret-menu-lab/demo.html](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html) · 或直接打开仓库里的 [`docs/demo.html`](./docs/demo.html)
+按场景 / 难度筛选、搜原料、🎲「今天吃什么？随机来一道」、一键复制文字版配方——12 张配方卡全部基于真实快照。
 
 <table>
   <tr>
@@ -113,7 +130,7 @@ node src/lab.mjs order --recipe cola-float --store 1450713 --yes  # 真实下单
 ## 在 Agent 里使用（WorkBuddy / Claude / Cherry Studio / Cursor）
 
 1. 按 [`mcp-config.example.json`](./mcp-config.example.json) 配置麦当劳 MCP 连接器，把 `${MCD_MCP_TOKEN}` 换成你的 Token
-2. 把本仓库的 [`SKILL.md`](./SKILL.md) 作为 Skill 加载（WorkBuddy：技能 → 导入；Claude Code：放入 skills 目录）
+2. 安装 Skill：`.\install.ps1`（Windows）或 `bash install.sh`（macOS / Linux）会把它装进 WorkBuddy 与 Claude Code 的技能目录；其他客户端直接加载 [`SKILL.md`](./SKILL.md)。各客户端的 MCP 配置模板见 [`mcp-config/`](./mcp-config/README.md)，也可下载 [`dist/mcd-secret-menu-lab-skill.zip`](./dist/mcd-secret-menu-lab-skill.zip) 在 GUI 里导入
 3. 对话：
 
 > **你**：晚上加班想吃点不一样的，30 块以内。
@@ -193,11 +210,18 @@ mcd-secret-menu-lab/
 │   ├── card.mjs                 # 配方卡 HTML / 文本 / 演示页渲染
 │   ├── sample.mjs               # 快照加载
 │   └── sample-data/             # 真实快照：menu.json（183 项）、nutrition.json（158 项）
-├── scripts/refresh-sample-data.mjs  # 用你的 Token 刷新快照
+├── scripts/
+│   ├── refresh-sample-data.mjs  # 用你的 Token 刷新快照
+│   └── build-dist.ps1           # 打包 Skill ZIP
+├── mcp-config/                  # 各客户端 MCP 配置模板（WorkBuddy / Cursor / Claude Code / VS Code）
+├── install.ps1 · install.sh     # 一键安装 Skill 到 WorkBuddy / Claude Code
 ├── references/recipes.md        # 图鉴（Agent 模式 B 参考）
 ├── assets/cards/*.png           # 12 张配方卡
-├── docs/demo.html               # 演示页（GitHub Pages）
+├── docs/demo.html               # 交互演示页（GitHub Pages）
+├── docs/share/                  # 分享素材（小红书 / 知乎 / 朋友圈）
 ├── docs/DESIGN.md               # 设计文档
+├── .github/ISSUE_TEMPLATE/      # 隐藏吃法投稿模板
+├── CONTRIBUTING.md · CHANGELOG.md · README.en.md
 └── test/selftest.mjs            # 自测（node --test）
 ```
 
@@ -205,14 +229,38 @@ mcd-secret-menu-lab/
 
 - [ ] 外送场景（`delivery-query-addresses` → `delivery-query-stores` → 麦乐送下单）
 - [ ] 自动套券：`query-store-coupons` / `auto-bind-coupons` 与 `calculate-price` 联动
-- [ ] 「隐藏吃法投稿」：欢迎用 PR 添加你的配方（原料必须是在售餐品）
 - [ ] 随心配 / 套餐的 `query-meal-detail` 子项选择
+
+**投稿你的隐藏吃法**：不用写代码，到 [Issues → 🍟 投稿一个隐藏吃法](../../issues/new?template=recipe.yml) 填表即可；通过的吃法会加入图鉴并署名。详见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+## 🧑‍🍳 社区投稿墙
+
+虚位以待——第一个被收录的投稿吃法会出现在这里，并署名投稿人。投稿入口：[Issues → 🍟 投稿一个隐藏吃法](../../issues/new?template=recipe.yml)。
+
+## 分享素材
+
+想把它介绍给朋友？[`docs/share/`](./docs/share/README.md) 里有现成的小红书 / 知乎 / 朋友圈文案与配图直链，全部原创、随意改写。
+
+## FAQ
+
+- **没有 Token 能用吗？** 能。所有命令自动降级为真实快照；只有 `price` / `order` / `stores` / `doctor` 需要联网。
+- **为什么早餐吃法显示「缺」？** 早餐单品只在早餐时段上架。联网时按服务器时间判断；离线快照已合并次日早餐菜单。
+- **价格为什么和我看到的不一样？** 离线显示快照价；联网时以 `calculate-price` 实时结果为准，门店、时段、优惠都会影响。
+- **会不会替我付款？** 不会。`create-order` 只创建订单并返回支付入口，支付在麦当劳官方渠道完成；而且必须显式加 `--yes`。
+- **能加我自己的吃法吗？** 能，用 Issue 模板投稿，或按 [CONTRIBUTING.md](./CONTRIBUTING.md) 提 PR。
 
 ## 参赛信息
 
 本项目参加 [麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge)。仓库包含赛事要求的 `README.md`、`CONTEST_DECLARATION.md`（官方原文）、`MCP_INTEGRATION.md`、`mcp-config.example.json` 与完整源代码。
 
 如果这个项目让你想立刻去买一份薯条和圆筒，欢迎点个 ⭐。
+
+<details>
+<summary>搜索关键词</summary>
+
+麦当劳隐藏菜单 · 麦当劳隐藏吃法 · 麦门 · 麦当劳 MCP · McDonald's MCP · MCP Skill · 麦当劳点餐助手 · 薯条蘸冰淇淋 · 可乐浮雪 · 麦当劳 Agent · WorkBuddy 技能 · Claude Code Skill · 程序员节 · 麦当劳程序员创意开发大赛
+
+</details>
 
 ## License
 

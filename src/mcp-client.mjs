@@ -14,7 +14,7 @@
 
 const DEFAULT_ENDPOINT = 'https://mcp.mcd.cn';
 const PROTOCOL_VERSION = '2025-06-18';
-const CLIENT_INFO = { name: 'mcd-secret-menu-lab', version: '0.1.0' };
+const CLIENT_INFO = { name: 'mcd-secret-menu-lab', version: '0.2.0' };
 
 import { extractJson, unwrapBusiness } from './mcp-parse.mjs';
 

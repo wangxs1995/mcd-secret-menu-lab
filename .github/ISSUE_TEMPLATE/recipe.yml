@@ -1,0 +1,72 @@
+name: 🍟 投稿一个隐藏吃法
+description: 把你的麦门隐藏吃法加入图鉴（原料必须是麦当劳在售餐品）
+title: "[吃法投稿] "
+labels: ["recipe", "contribution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢投稿！通过审核的吃法会加入 `src/recipes.mjs` 图鉴并生成配方卡，署名你的 GitHub ID。
+  - type: input
+    id: name
+    attributes:
+      label: 吃法名称
+      placeholder: 例：冰雪薯条
+    validations:
+      required: true
+  - type: input
+    id: tagline
+    attributes:
+      label: 一句话卖点
+      placeholder: 例：咸与甜的第一次握手
+  - type: textarea
+    id: ingredients
+    attributes:
+      label: 原料（必须是麦当劳在售餐品，每行一个）
+      placeholder: |
+        薯条
+        圆筒冰淇淋
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 改造步骤（3 步内，拿到餐后自己完成）
+      placeholder: |
+        1. 点一份现炸薯条和一个圆筒冰淇淋
+        2. 捏住薯条根部，旋转蘸取冰淇淋
+        3. 趁冰淇淋没化，三秒内入口
+    validations:
+      required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: 难度
+      options:
+        - 新手友好
+        - 进阶玩家
+        - 地狱试炼
+    validations:
+      required: true
+  - type: checkboxes
+    id: vibes
+    attributes:
+      label: 适合场景
+      options:
+        - label: 早餐
+        - label: 正餐
+        - label: 下午茶
+        - label: 夜宵
+  - type: textarea
+    id: story
+    attributes:
+      label: 背景故事 / 老饕提示（可选）
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: 投稿确认
+      options:
+        - label: 原料都是麦当劳在售餐品，改造动作在拿到餐后自己完成，不需要门店做任何特殊处理
+          required: true
+        - label: 内容轻松友善，不含对其他品牌的对比，不宣传不健康饮食方式
+          required: true
