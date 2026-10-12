@@ -15,7 +15,8 @@ foreach ($f in @('SKILL.md', 'README.md', 'LICENSE', 'package.json', 'mcp-config
 }
 
 if (Test-Path $Zip) { Remove-Item $Zip -Force }
-Compress-Archive -Path $Stage -DestinationPath $Zip
+# 压缩目录内容而不是目录本身：SKILL.md 必须位于 ZIP 根目录（SkillHub / WorkBuddy 导入要求）
+Compress-Archive -Path (Join-Path $Stage '*') -DestinationPath $Zip
 Remove-Item $Stage -Recurse -Force
 $size = [math]::Round((Get-Item $Zip).Length / 1KB)
 Write-Host "✅ $Zip ($size KB)"

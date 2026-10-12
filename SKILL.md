@@ -1,5 +1,17 @@
 ---
 name: mcd-secret-menu-lab
+slug: mcd-secret-menu-lab
+displayName: 麦门隐藏菜单研究所
+version: 0.2.0
+summary: 用麦当劳真实在售餐品组合「隐藏吃法」：实时校验门店可做、算热量与价格、生成可晒的配方卡、一键下单，基于麦当劳官方 MCP。
+license: MIT
+homepage: https://github.com/wangxs1995/mcd-secret-menu-lab
+tags:
+  - 麦当劳
+  - MCP
+  - 隐藏菜单
+  - 点餐
+  - 配方卡
 description: 麦门隐藏菜单研究所 —— 用麦当劳真实在售餐品组合「隐藏吃法」的 Agent Skill。当用户想尝试麦当劳隐藏吃法 / DIY 组合 / 暗号点单，问「怎么点更香、更有趣、更划算」，想按预算或热量选一份麦当劳，或想生成可分享的配方卡时使用。基于麦当劳官方 MCP（mcp.mcd.cn），支持真实菜单校验、热量与价格计算、一键下单。
 ---
 
