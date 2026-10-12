@@ -12,10 +12,12 @@ FILES=(SKILL.md package.json mcp-config.example.json .env.example references src
 targets=()
 [[ "$TARGET" == "workbuddy" || "$TARGET" == "all" ]] && targets+=("$HOME/.workbuddy/skills/$NAME")
 [[ "$TARGET" == "claude"    || "$TARGET" == "all" ]] && targets+=("$HOME/.claude/skills/$NAME")
+BACKUP_ROOT="$HOME/.$NAME-backups"
 
 for dest in "${targets[@]}"; do
   if [[ -d "$dest" ]]; then
-    backup="$dest.bak-$(date +%Y%m%d-%H%M%S)"
+    mkdir -p "$BACKUP_ROOT"
+    backup="$BACKUP_ROOT/$(basename "$(dirname "$(dirname "$dest")")")-$(date +%Y%m%d-%H%M%S)"
     mv "$dest" "$backup"
     echo "已备份旧版本 -> $backup"
   fi
@@ -23,6 +25,8 @@ for dest in "${targets[@]}"; do
   for f in "${FILES[@]}"; do
     [[ -e "$SRC/$f" ]] && cp -R "$SRC/$f" "$dest/"
   done
+  # 本地 .env（含你的 Token）一并复制，这样 Agent 运行 CLI 时能走联网模式；只在本机，不会进入任何仓库
+  if [[ -f "$SRC/.env" ]]; then cp "$SRC/.env" "$dest/"; echo "已复制本地 .env（联网模式可用）"; fi
   echo "✅ 已安装到 $dest"
 done
 

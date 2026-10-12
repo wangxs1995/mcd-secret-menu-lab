@@ -21,7 +21,9 @@ import { sumPrice, quoteViaMcp } from './pricing.mjs';
 import { normalizeMenuData, parseNutritionData, parseCampaignCalendar } from './mcp-parse.mjs';
 import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, writeFileEnsured } from './card.mjs';
 import { checkText, checkRecipes } from './compliance.mjs';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 
 /** lint 命令缺省扫描的文案文件（规则说明类文件本身含示例词，不在列） */
 const DEFAULT_LINT_FILES = [
@@ -81,6 +83,8 @@ const HELP = `
   --tag <标签>         标签过滤（lab / recipes）
   --out <path>         card / demo 的输出路径
   --format text        card 命令只输出文本版
+  --spec <json|文件>   card：为自创吃法出卡，JSON 至少含 name / ingredients / steps（供 Agent 使用）
+  --png                card：生成后自动用本机 Edge / Chrome 截图成 PNG
   --takeway <code>     order 命令的取餐方式（eat-in 堂食 / locker-out 外带，缺省取算价返回的第一项）
   --city / --keyword   stores 命令：城市 + 关键词（如 --city 上海市 --keyword 人民广场）
 
@@ -256,9 +260,10 @@ async function cmdLab(flags) {
 }
 
 async function cmdCard(flags) {
-  const recipe = requireRecipe(flags);
+  const custom = typeof flags.spec === 'string';
+  const recipe = custom ? loadSpec(flags.spec) : requireRecipe(flags);
   const context = await loadContext(flags);
-  const data = buildCardData(recipe, context);
+  const data = buildCardData(recipe, context, { keepMissing: custom });
 
   if (flags.format === 'text') {
     console.log(printCardText(recipe, data));
@@ -268,7 +273,93 @@ async function cmdCard(flags) {
   writeFileEnsured(out, renderCardHtml(recipe, data));
   console.log(printCardText(recipe, data));
   console.log(green(`\n✅ 配方卡已生成 → ${out}`));
-  console.log(dim('   用浏览器打开后截图，即可直接发小红书 / 朋友圈。\n'));
+  if (flags.png) {
+    const png = screenshotHtml(out, out.replace(/\.html?$/i, '') + '.png');
+    if (png) console.log(green(`✅ 配方卡图片已生成 → ${png}`));
+    else console.log(yellow('⚠️ 未找到可用的 Edge / Chrome，无法自动截图；可用浏览器打开 HTML 后手动截图，或设置 BROWSER_PATH 指向浏览器可执行文件'));
+  } else {
+    console.log(dim('   用浏览器打开后截图即可分享；加 --png 可自动截图成图片。\n'));
+  }
+}
+
+/** 解析 --spec：JSON 字符串或 .json 文件路径 → 临时配方（供 Agent 为自创吃法出卡） */
+function loadSpec(spec) {
+  const raw = spec.trim().startsWith('{') ? spec : readFileSync(resolve(spec), 'utf8');
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    throw new McpError(`--spec 不是合法 JSON：${error.message}`, { code: 'BAD_ARGS' });
+  }
+  if (!parsed.name || !Array.isArray(parsed.ingredients) || parsed.ingredients.length === 0 || !Array.isArray(parsed.steps)) {
+    throw new McpError('--spec 至少需要 name、ingredients（数组）、steps（数组）三个字段', { code: 'BAD_ARGS' });
+  }
+  const ingredients = parsed.ingredients.map((entry) =>
+    typeof entry === 'string'
+      ? { name: entry, match: [entry], role: '' }
+      : {
+          name: entry.name,
+          match: Array.isArray(entry.match) && entry.match.length ? entry.match : [entry.name],
+          nutritionMatch: Array.isArray(entry.nutritionMatch) ? entry.nutritionMatch : undefined,
+          quantity: Number.isFinite(entry.quantity) ? entry.quantity : 1,
+          price: Number.isFinite(entry.price) ? entry.price : undefined,
+          role: entry.role ?? '',
+        },
+  );
+  const slug = String(parsed.id ?? parsed.name).toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-').replace(/^-|-$/g, '') || 'custom';
+  return {
+    id: parsed.id ?? `custom-${slug}`,
+    name: String(parsed.name),
+    emoji: parsed.emoji ?? '🍟',
+    tagline: parsed.tagline ?? '',
+    mechanic: parsed.mechanic ?? 'combo',
+    ingredients,
+    steps: parsed.steps.map(String),
+    tags: Array.isArray(parsed.tags) ? parsed.tags : ['自创吃法'],
+    difficulty: [1, 2, 3].includes(parsed.difficulty) ? parsed.difficulty : 1,
+    vibes: Array.isArray(parsed.vibes) && parsed.vibes.length ? parsed.vibes : ['正餐'],
+    heat: Number.isFinite(parsed.heat) ? parsed.heat : 3,
+    story: parsed.story ?? '',
+    tip: parsed.tip ?? '',
+  };
+}
+
+/** 用本机 Edge / Chrome 无头截图（Windows / macOS / Linux），失败返回 null */
+function screenshotHtml(htmlPath, pngPath) {
+  const candidates = [
+    process.env.BROWSER_PATH,
+    'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+    'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
+    'C:/Program Files/Google/Chrome/Application/chrome.exe',
+    'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/microsoft-edge',
+  ].filter(Boolean);
+  const browser = candidates.find((path) => existsSync(path));
+  if (!browser) return null;
+  const fileUrl = pathToFileURL(htmlPath).href;
+  const result = spawnSync(
+    browser,
+    [
+      '--headless=new',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--hide-scrollbars',
+      '--force-device-scale-factor=2',
+      '--window-size=480,1200',
+      '--virtual-time-budget=3000',
+      `--user-data-dir=${join(tmpdir(), 'mcd-secret-menu-lab-shot')}`,
+      `--screenshot=${pngPath}`,
+      fileUrl,
+    ],
+    { stdio: 'ignore', timeout: 60_000 },
+  );
+  return result.status === 0 && existsSync(pngPath) ? pngPath : null;
 }
 
 async function cmdPrice(flags) {
@@ -384,6 +475,11 @@ async function cmdDemo(flags) {
     }),
   );
   console.log(green(`✅ 演示页已生成 → ${out}`));
+  // 每道吃法一个独立卡片页（docs/cards/<id>.html），供 Agent 在对话里给出可点击的卡片链接
+  for (const recipe of RECIPES) {
+    writeFileEnsured(join(ROOT, 'docs', 'cards', `${recipe.id}.html`), renderCardHtml(recipe, dataMap[recipe.id]));
+  }
+  console.log(green(`✅ 独立卡片页已生成 → docs/cards/*.html（${RECIPES.length} 个）`));
   const social = join(ROOT, 'docs', 'social.html');
   writeFileEnsured(social, renderSocialPage(RECIPES, dataMap));
   console.log(green(`✅ 社交预览模板已生成 → ${social}`) + dim('（1280×640，截图后作为仓库 Social preview）'));
@@ -479,14 +575,19 @@ async function loadContext(flags, { requireLive = false } = {}) {
     return { source: 'sample', client: null, storeCode: store.storeCode, storeName: store.storeName, items, nutrition: loadSampleNutrition() };
   }
 
+  const storeCode = typeof flags.store === 'string' ? flags.store : process.env.MCD_STORE_CODE || null;
+  if (!storeCode) {
+    if (requireLive) {
+      throw new McpError('该命令需要指定门店：--store <门店编码>（或在 .env 设置 MCD_STORE_CODE）。可先用 node src/lab.mjs stores --city <城市> --keyword <地标> 查询', {
+        code: 'NO_STORE',
+      });
+    }
+    console.error(yellow('ℹ️ 未指定 --store（也可在 .env 设置 MCD_STORE_CODE），本次使用真实快照数据；加 --store <门店编码> 可用实时菜单'));
+    const { items, store } = loadSampleMenu();
+    return { source: 'sample', client: null, storeCode: store.storeCode, storeName: store.storeName, items, nutrition: loadSampleNutrition() };
+  }
   const client = getClient(flags);
   await client.initialize();
-  const storeCode = typeof flags.store === 'string' ? flags.store : null;
-  if (!storeCode) {
-    throw new McpError('联网模式需要指定门店：--store <门店编码>。可先用 node src/lab.mjs stores --city <城市> --keyword <地标> 查询', {
-      code: 'NO_STORE',
-    });
-  }
   const menuData = await client.callToolData('query-meals', { storeCode, ...PICKUP });
   const items = normalizeMenuData(menuData);
   if (items.length === 0) {
@@ -540,11 +641,18 @@ async function resolveCampaigns(context) {
 
 /* ---------------- 通用小函数 ---------------- */
 
-function buildCardData(recipe, context) {
-  const { resolved } = validateRecipe(recipe, context.items);
-  const price = sumPrice(resolved);
-  const stats = sumNutrition(resolved, context.nutrition);
-  return { resolved, price, stats, bill: mealBill(stats.kcal), source: context.source, storeName: context.storeName, generatedAt: new Date() };
+function buildCardData(recipe, context, { keepMissing = false } = {}) {
+  const { resolved, missing } = validateRecipe(recipe, context.items);
+  const lines = [...resolved];
+  if (keepMissing) {
+    // 自创吃法：菜单里暂时找不到的原料也保留在卡片上（价格用 spec 给的或留空）
+    for (const ingredient of missing) {
+      lines.push({ ingredient, item: { name: ingredient.name, priceYuan: ingredient.price ?? null }, quantity: ingredient.quantity ?? 1 });
+    }
+  }
+  const price = sumPrice(lines);
+  const stats = sumNutrition(lines, context.nutrition);
+  return { resolved: lines, price, stats, bill: mealBill(stats.kcal), source: context.source, storeName: context.storeName, generatedAt: new Date() };
 }
 
 function toOrderItems(resolved) {

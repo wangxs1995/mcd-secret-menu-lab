@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>薯饼夹击堡 · 麦门隐藏菜单研究所</title>
+<style>:root{--paper:#f6efdc;--ink:#232a21;--muted:#6b7263;--red:#c8102e;--gold:#e8a800;--green:#2e4a34;--line:#d8cfb6;}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#20301f;background-image:linear-gradient(rgba(246,239,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(246,239,220,.05) 1px,transparent 1px);background-size:26px 26px;padding:24px;}
+
+.card{width:420px;max-width:100%;background:var(--paper);border-radius:14px;padding:22px 22px 16px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
+.card::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(46,74,52,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(46,74,52,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none;}
+.card__header{display:flex;justify-content:space-between;gap:8px;font-family:ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;border-bottom:1.5px dashed var(--line);padding-bottom:10px;}
+.stamp{position:absolute;top:46px;right:-30px;transform:rotate(12deg);border:2px solid var(--red);color:var(--red);font-weight:800;letter-spacing:.3em;padding:6px 36px;opacity:.72;font-size:12px;}
+.hero{margin-top:14px;display:flex;gap:12px;align-items:flex-start;}
+.hero .emoji{font-size:40px;line-height:1;}
+.hero h1{font-size:26px;letter-spacing:.02em;margin:0;}
+.tagline{color:var(--muted);margin-top:4px;font-size:13px;}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0;}
+.chip{font-size:11px;border:1px solid var(--line);background:rgba(255,255,255,.5);padding:3px 8px;border-radius:999px;}
+.chip--red{border-color:var(--red);color:var(--red);}
+.sec{margin-top:14px;}
+.sec h2{font-size:11px;letter-spacing:.18em;color:var(--green);border-left:3px solid var(--gold);padding-left:6px;margin:0 0 8px;}
+.card table{width:100%;font-size:13px;border-collapse:collapse;}
+.card td{padding:4px 0;border-bottom:1px dotted var(--line);}
+td.num{text-align:right;font-family:ui-monospace,Consolas,monospace;white-space:nowrap;}
+tr.total td{font-weight:700;border-bottom:none;}
+ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
+.stats{display:flex;gap:14px;flex-wrap:wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px;align-items:baseline;}
+.stats b{font-size:15px;}
+.bill{font-size:12px;color:var(--muted);margin-top:6px;}
+.story{font-size:12.5px;color:#4a5244;line-height:1.7;margin:0;}
+.tip{font-size:12.5px;background:rgba(255,255,255,.45);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin-top:8px;}
+.card__footer{margin-top:14px;border-top:1.5px dashed var(--line);padding-top:10px;font-size:10.5px;color:var(--muted);line-height:1.6;}
+.card__footer a{color:var(--green);}
+</style>
+</head>
+<body>
+<article class="card">
+  <div class="stamp">SECRET</div>
+  <header class="card__header">
+    <span>Secret Menu Lab · 机密档案</span>
+    <span>No.SML-2596</span>
+  </header>
+  <div class="hero">
+    <div class="emoji">🌅🍳</div>
+    <div>
+      <h1>薯饼夹击堡</h1>
+      <div class="tagline">早八人的加装包</div>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="chip chip--red">新手友好</span>
+    <span class="chip">机制 · 夹</span>
+    <span class="chip">早餐</span>
+    <span class="chip">麦门热度 ★★★★☆</span>
+  </div>
+  <section class="sec">
+    <h2>原料清单</h2>
+    <table>
+      <tr><td>猪柳蛋麦满分</td><td class="num">¥18.0</td></tr><tr><td>脆薯饼</td><td class="num">¥8.5</td></tr>
+      <tr class="total"><td>合计</td><td class="num">¥26.5</td></tr>
+    </table>
+  </section>
+  <section class="sec">
+    <h2>改造步骤</h2>
+    <ol class="steps"><li>打开麦满分</li><li>把薯饼夹进肉饼下面</li><li>合上，配豆浆或咖啡，早八回魂</li></ol>
+  </section>
+  <section class="sec">
+    <h2>营养快照</h2>
+    <div class="stats"><span><b>533</b> 千卡</span><span>蛋白质 <b>24</b>g</span><span>脂肪 <b>30</b>g</span><span>钠 <b>1157</b>mg</span></div>
+    <div class="bill">🔥 热量账单：约等于散步 135 分钟，或慢跑 55 分钟（估算，仅供参考）</div>
+  </section>
+  <section class="sec">
+    <h2>麦门笔记</h2>
+    <p class="story">麦满分 + 薯饼是早餐时段的经典加装，脆感直接翻倍。</p>
+    <div class="tip">💡 薯饼要现炸的，软了就没灵魂。</div>
+  </section>
+  <footer class="card__footer">
+    本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
+    生成时间 2026.10.12 10:02 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+  </footer>
+</article>
+</body>
+</html>

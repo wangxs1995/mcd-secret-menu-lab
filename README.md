@@ -151,7 +151,7 @@ Skill 支持两种模式：**模式 A** 调用本仓库 CLI（推荐，价格与
 | `recipes` | 隐藏吃法图鉴（`--vibe` / `--tag` / `--difficulty` / `--json`） | 否           |
 | `menu`    | 门店菜单 + 今日可做的吃法（`--store`）                              | 联网时需要，否则用快照 |
 | `lab`     | 按预算 / 热量 / 场景筛方案；联网时自动按服务器时间推断时段并联动活动日历                | 同上          |
-| `card`    | 生成配方卡 HTML（`--format text` 只输出文本）                      | 同上          |
+| `card`    | 生成配方卡 HTML（`--png` 自动截图成图片；`--spec '{...}'` 为自创吃法出卡；`--format text` 只输出文本） | 同上          |
 | `price`   | 实时算价（含优惠、取餐方式）                                         | 是           |
 | `order`   | 下单（默认预演，`--yes` 真实下单，`--takeway eat-in/locker-out`）    | 是           |
 | `stores`  | 查询门店（`--city` + `--keyword`）                           | 是           |
@@ -256,6 +256,7 @@ mcd-secret-menu-lab/
 
 - **会不会替我付款？** 不会。`create-order` 只创建订单并返回支付入口，支付在麦当劳官方渠道完成；而且必须显式加 `--yes`。
 - **能加我自己的吃法吗？** 能，用 Issue 模板投稿，或按 [CONTRIBUTING.md](./CONTRIBUTING.md) 提 PR。
+- **在 WorkBuddy / Claude 里对话，回复里怎么没有卡片？** 卡片是 CLI 生成的 HTML / PNG 文件，聊天窗口只显示文字。Skill 已要求 Agent 在回复里按「文字版配方卡」格式输出，并对图鉴 12 道附上在线卡片链接；想要图片版，让它运行 `node src/lab.mjs card --recipe <id> --png`，自创吃法用 `card --spec '{...}' --png`，生成的文件路径会出现在回复里。
 
 ## 参赛信息
 

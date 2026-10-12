@@ -27,7 +27,8 @@ description: 麦门隐藏菜单研究所 —— 用麦当劳真实在售餐品�
 node src/lab.mjs stores --city 上海市 --keyword 人民广场      # 找门店，拿 storeCode
 node src/lab.mjs menu  --store <storeCode>                   # 实时菜单 + 今天能做的隐藏吃法
 node src/lab.mjs lab   --store <storeCode> --budget 30       # 按约束出 3 个方案（自动联动时段与活动日历）
-node src/lab.mjs card  --recipe fries-float                  # 生成配方卡（HTML，可截图晒图）
+node src/lab.mjs card  --recipe fries-float --png            # 生成配方卡（HTML + 自动截图 PNG）
+node src/lab.mjs card  --spec '{"name":"…","ingredients":["脆薯饼","圆筒冰淇淋"],"steps":["…"]}' --png   # 为自创吃法出卡
 node src/lab.mjs price --recipe fries-float --store <storeCode>        # MCP 实时算价（含优惠）
 node src/lab.mjs order --recipe fries-float --store <storeCode>        # 预演下单（dry-run）
 node src/lab.mjs order --recipe fries-float --store <storeCode> --yes  # 真实下单（需用户明确同意）
@@ -58,10 +59,38 @@ node src/lab.mjs order --recipe fries-float --store <storeCode> --yes  # 真实�
 7. 不与其他品牌对比；不做医疗功效宣称；不用「最 / 第一 / 之王」类绝对化用语；不宣传不健康饮食或浪费；输出保持轻松、友善
 8. **生成文案后自检**：模式 A 下运行 `node src/lab.mjs lint --text "<文案>"`，有命中就改掉再交给用户；模式 B 下对照以上两条逐句自查
 
-## 输出规范
+## 输出规范（聊天里就要「看得见卡片」）
 
-方案需包含：吃法名 / 一句话卖点 / 原料清单（含价格）/ 改造步骤（3 步内）/ 营养估算 / 老饕提示。
-配方卡的纯文本格式可直接参考：`node src/lab.mjs card --recipe <id> --format text`
+配方卡是 CLI 生成的 HTML / PNG 文件，聊天窗口不会自动显示文件，所以**每个方案都必须在回复里用「文字版配方卡」格式呈现**，再附文件或链接：
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案
+🍟❄️ 冰雪薯条 —— 咸与甜的第一次握手
+难度：新手友好 · 机制：蘸 · 场景：下午茶/夜宵 · 热度：★★★★★
+
+原料：
+  · 薯条　¥13.5
+  · 圆筒冰淇淋　¥5.0
+  合计：¥18.5（MCP 实时算价 / 快照）
+
+改造步骤：
+  1. 点一份现炸薯条和一个圆筒冰淇淋
+  2. 捏住薯条根部，旋转蘸取冰淇淋
+  3. 趁冰淇淋没化，三秒内入口
+
+营养：382 千卡 · 蛋白质 6g · 脂肪 15g · 钠 201mg（估算，仅供参考）
+老饕提示：薯条要现炸的，冰淇淋用圆筒比新地更好蘸。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+然后按情况补一行「卡片」：
+
+- 方案是图鉴里的 12 道之一：给出在线卡片链接 `https://wangwengao.github.io/mcd-secret-menu-lab/cards/<id>.html` 和图片直链 `https://raw.githubusercontent.com/wangwengao/mcd-secret-menu-lab/main/assets/cards/<id>.png`
+- 自创吃法（模式 A）：运行 `node src/lab.mjs card --spec '{"name":"薯饼冰淇淋三明治","emoji":"🍦","tagline":"…","ingredients":["脆薯饼","圆筒冰淇淋"],"steps":["…","…","…"],"vibes":["早餐"]}' --png`，把生成的 HTML / PNG 路径告诉用户
+- 自创吃法（模式 B，无法运行命令）：只输出文字版配方卡，并说明「用仓库的 card --spec 命令可生成图片版」
+
+文字版格式可用 `node src/lab.mjs card --recipe <id> --format text` 查看。
 
 ## 示例对话
 

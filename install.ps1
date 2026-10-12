@@ -14,10 +14,12 @@ $Files = @('SKILL.md', 'package.json', 'mcp-config.example.json', '.env.example'
 $targets = @()
 if ($Target -in @('workbuddy', 'all')) { $targets += Join-Path $HOME ".workbuddy\skills\$Name" }
 if ($Target -in @('claude', 'all'))    { $targets += Join-Path $HOME ".claude\skills\$Name" }
+$BackupRoot = Join-Path $HOME ".$Name-backups"
 
 foreach ($dest in $targets) {
   if (Test-Path $dest) {
-    $backup = "$dest.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+    New-Item -ItemType Directory -Force -Path $BackupRoot | Out-Null
+    $backup = Join-Path $BackupRoot ("{0}-{1}" -f (Split-Path (Split-Path $dest -Parent) -Parent | Split-Path -Leaf), (Get-Date -Format 'yyyyMMdd-HHmmss'))
     Move-Item $dest $backup
     Write-Host "已备份旧版本 -> $backup"
   }
@@ -26,6 +28,9 @@ foreach ($dest in $targets) {
     $from = Join-Path $Src $f
     if (Test-Path $from) { Copy-Item $from -Destination $dest -Recurse -Force }
   }
+  # 本地 .env（含你的 Token）一并复制，这样 Agent 运行 CLI 时能走联网模式；只在本机，不会进入任何仓库
+  $envFile = Join-Path $Src '.env'
+  if (Test-Path $envFile) { Copy-Item $envFile -Destination $dest -Force; Write-Host "已复制本地 .env（联网模式可用）" }
   Write-Host "✅ 已安装到 $dest"
 }
 
