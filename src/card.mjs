@@ -59,6 +59,22 @@ body{margin:0;background:#20301f;background-image:linear-gradient(rgba(246,239,2
 .page-footer{max-width:900px;margin:48px auto 0;text-align:center;font-size:12px;color:#9aa892;line-height:1.8;}
 .page-footer a{color:var(--gold);}
 @media (max-width:480px){.grid{grid-template-columns:1fr;}.card{width:100%;}}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:26px auto 0;max-width:1100px;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;}
+.tchip{border:1px solid rgba(246,239,220,.35);background:transparent;color:var(--paper);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit;}
+.tchip--on{background:var(--gold);color:#20301f;border-color:var(--gold);font-weight:700;}
+.search{border:1px solid rgba(246,239,220,.35);background:rgba(0,0,0,.25);color:var(--paper);border-radius:999px;padding:7px 14px;font-size:13px;min-width:220px;outline:none;font-family:inherit;}
+.search::placeholder{color:#9aa892;}
+.btn{display:inline-block;border:1px solid rgba(246,239,220,.35);background:transparent;color:var(--paper);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;text-decoration:none;font-family:inherit;}
+.btn--primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700;}
+.btn--ghost{font-size:12px;padding:5px 10px;}
+.count{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#9aa892;}
+.slot{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.slot[hidden]{display:none;}
+.slot__actions{display:flex;gap:8px;}
+.slot--hit .card{outline:3px solid var(--gold);animation:pulse 1.2s ease-out 1;}
+@keyframes pulse{0%{transform:scale(1)}30%{transform:scale(1.03)}100%{transform:scale(1)}}
+.slot__text{display:none;}
 `;
 
 /**
@@ -166,15 +182,30 @@ export function renderCardFragment(recipe, data = {}) {
 </article>`;
 }
 
-/** 渲染演示页（docs/demo.html） */
+/** 渲染演示页（docs/demo.html）：零安装的交互体验 —— 场景 / 难度筛选、搜索、随机抽取、一键复制文字版 */
 export function renderCardPage(recipes, dataMap = {}, { title = '麦门隐藏菜单研究所', subtitle = '', note = '' } = {}) {
-  const cards = recipes.map((recipe) => renderCardFragment(recipe, dataMap[recipe.id] ?? {})).join('\n');
+  const slots = recipes
+    .map((recipe) => {
+      const data = dataMap[recipe.id] ?? {};
+      const searchText = [recipe.name, recipe.tagline, ...recipe.tags, ...recipe.ingredients.map((i) => i.name)].join(' ');
+      return `<div class="slot" data-id="${esc(recipe.id)}" data-vibes="${esc(recipe.vibes.join(','))}" data-difficulty="${recipe.difficulty}" data-search="${esc(searchText)}">
+${renderCardFragment(recipe, data)}
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="${esc(recipe.id)}">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="${REPO_URL}#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">${esc(printCardText(recipe, data))}</textarea>
+</div>`;
+    })
+    .join('\n');
+
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} · MCD Secret Menu Lab</title>
+<meta name="description" content="用麦当劳真实在售餐品组合隐藏吃法：筛选、随机抽取、复制配方，基于麦当劳 MCP。">
 <style>
 :root{--paper:#f6efdc;--ink:#232a21;--muted:#6b7263;--red:#c8102e;--gold:#e8a800;--green:#2e4a34;--line:#d8cfb6;}
 ${PAGE_CSS}
@@ -189,14 +220,89 @@ ${CARD_CSS}
     <p>${esc(subtitle || '用麦当劳真实在售餐品组合隐藏吃法 · 自动算营养价格 · 一键下单')}</p>
     ${note ? `<p class="page-note">${esc(note)}</p>` : ''}
   </header>
-  <main class="grid">
-${cards}
+  <section class="toolbar" aria-label="筛选与抽取">
+    <div class="chips" data-group="vibe">
+      <button type="button" class="tchip tchip--on" data-v="">全部场景</button>
+      <button type="button" class="tchip" data-v="早餐">🌅 早餐</button>
+      <button type="button" class="tchip" data-v="正餐">🍔 正餐</button>
+      <button type="button" class="tchip" data-v="下午茶">☕ 下午茶</button>
+      <button type="button" class="tchip" data-v="夜宵">🌙 夜宵</button>
+    </div>
+    <div class="chips" data-group="difficulty">
+      <button type="button" class="tchip tchip--on" data-d="">全部难度</button>
+      <button type="button" class="tchip" data-d="1">新手友好</button>
+      <button type="button" class="tchip" data-d="2">进阶玩家</button>
+      <button type="button" class="tchip" data-d="3">地狱试炼</button>
+    </div>
+    <input class="search" type="search" placeholder="搜原料或吃法，如：圆筒 / 鸡块" aria-label="搜索">
+    <button type="button" class="btn btn--primary" id="random">🎲 今天吃什么？随机来一道</button>
+    <span class="count" id="count"></span>
+  </section>
+  <main class="grid" id="grid">
+${slots}
   </main>
   <footer class="page-footer">
     ${esc(DISCLAIMER)}<br>
-    开源项目 · <a href="${REPO_URL}">${esc(REPO_URL)}</a> · 基于麦当劳 MCP 构建
+    开源项目 · <a href="${REPO_URL}">${esc(REPO_URL)}</a> · 基于麦当劳 MCP 构建 · 本页纯静态，不发起任何网络请求
   </footer>
 </div>
+<script>
+(function () {
+  var slots = Array.prototype.slice.call(document.querySelectorAll('.slot'));
+  var state = { vibe: '', difficulty: '', q: '' };
+  var count = document.getElementById('count');
+  function apply() {
+    var shown = 0;
+    slots.forEach(function (s) {
+      var okV = !state.vibe || s.getAttribute('data-vibes').split(',').indexOf(state.vibe) >= 0;
+      var okD = !state.difficulty || s.getAttribute('data-difficulty') === state.difficulty;
+      var okQ = !state.q || s.getAttribute('data-search').toLowerCase().indexOf(state.q) >= 0;
+      var on = okV && okD && okQ;
+      if (on) { s.removeAttribute('hidden'); shown += 1; } else { s.setAttribute('hidden', ''); }
+    });
+    count.textContent = '显示 ' + shown + ' / ' + slots.length + ' 道';
+  }
+  function bindChips(attr, key) {
+    var chips = Array.prototype.slice.call(document.querySelectorAll('[' + attr + ']'));
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        state[key] = chip.getAttribute(attr);
+        chips.forEach(function (c) { c.classList.toggle('tchip--on', c === chip); });
+        apply();
+      });
+    });
+  }
+  bindChips('data-v', 'vibe');
+  bindChips('data-d', 'difficulty');
+  document.querySelector('.search').addEventListener('input', function (e) {
+    state.q = e.target.value.trim().toLowerCase();
+    apply();
+  });
+  document.getElementById('random').addEventListener('click', function () {
+    var visible = slots.filter(function (s) { return !s.hasAttribute('hidden'); });
+    if (!visible.length) return;
+    slots.forEach(function (s) { s.classList.remove('slot--hit'); });
+    var pick = visible[Math.floor(Math.random() * visible.length)];
+    pick.classList.add('slot--hit');
+    pick.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.slot').querySelector('.slot__text').value;
+      var done = function (ok) {
+        btn.textContent = ok ? '✅ 已复制' : '❌ 复制失败';
+        setTimeout(function () { btn.textContent = '📋 复制文字版'; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      } else { done(false); }
+    });
+  });
+  var hash = decodeURIComponent(location.hash.slice(1));
+  if (hash === 'random') { document.getElementById('random').click(); }
+  apply();
+})();
+</script>
 </body>
 </html>
 `;

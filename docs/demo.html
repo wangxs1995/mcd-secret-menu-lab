@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>麦门隐藏菜单研究所 · MCD Secret Menu Lab</title>
+<meta name="description" content="用麦当劳真实在售餐品组合隐藏吃法：筛选、随机抽取、复制配方，基于麦当劳 MCP。">
 <style>
 :root{--paper:#f6efdc;--ink:#232a21;--muted:#6b7263;--red:#c8102e;--gold:#e8a800;--green:#2e4a34;--line:#d8cfb6;}
 
@@ -20,6 +21,22 @@ body{margin:0;background:#20301f;background-image:linear-gradient(rgba(246,239,2
 .page-footer{max-width:900px;margin:48px auto 0;text-align:center;font-size:12px;color:#9aa892;line-height:1.8;}
 .page-footer a{color:var(--gold);}
 @media (max-width:480px){.grid{grid-template-columns:1fr;}.card{width:100%;}}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:26px auto 0;max-width:1100px;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;}
+.tchip{border:1px solid rgba(246,239,220,.35);background:transparent;color:var(--paper);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit;}
+.tchip--on{background:var(--gold);color:#20301f;border-color:var(--gold);font-weight:700;}
+.search{border:1px solid rgba(246,239,220,.35);background:rgba(0,0,0,.25);color:var(--paper);border-radius:999px;padding:7px 14px;font-size:13px;min-width:220px;outline:none;font-family:inherit;}
+.search::placeholder{color:#9aa892;}
+.btn{display:inline-block;border:1px solid rgba(246,239,220,.35);background:transparent;color:var(--paper);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;text-decoration:none;font-family:inherit;}
+.btn--primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700;}
+.btn--ghost{font-size:12px;padding:5px 10px;}
+.count{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#9aa892;}
+.slot{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.slot[hidden]{display:none;}
+.slot__actions{display:flex;gap:8px;}
+.slot--hit .card{outline:3px solid var(--gold);animation:pulse 1.2s ease-out 1;}
+@keyframes pulse{0%{transform:scale(1)}30%{transform:scale(1.03)}100%{transform:scale(1)}}
+.slot__text{display:none;}
 
 
 .card{width:420px;max-width:100%;background:var(--paper);border-radius:14px;padding:22px 22px 16px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
@@ -58,7 +75,26 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
     <p>用麦当劳真实在售餐品组合隐藏吃法 · 自动算营养价格 · 一键下单</p>
     <p class="page-note">演示页基于麦当劳 MCP 真实快照生成（麦当劳上海黄浦华旭国际大厦餐厅 · 2026-10-10 17:29（北京时间））；联网模式下所有数据实时来自 MCP。</p>
   </header>
-  <main class="grid">
+  <section class="toolbar" aria-label="筛选与抽取">
+    <div class="chips" data-group="vibe">
+      <button type="button" class="tchip tchip--on" data-v="">全部场景</button>
+      <button type="button" class="tchip" data-v="早餐">🌅 早餐</button>
+      <button type="button" class="tchip" data-v="正餐">🍔 正餐</button>
+      <button type="button" class="tchip" data-v="下午茶">☕ 下午茶</button>
+      <button type="button" class="tchip" data-v="夜宵">🌙 夜宵</button>
+    </div>
+    <div class="chips" data-group="difficulty">
+      <button type="button" class="tchip tchip--on" data-d="">全部难度</button>
+      <button type="button" class="tchip" data-d="1">新手友好</button>
+      <button type="button" class="tchip" data-d="2">进阶玩家</button>
+      <button type="button" class="tchip" data-d="3">地狱试炼</button>
+    </div>
+    <input class="search" type="search" placeholder="搜原料或吃法，如：圆筒 / 鸡块" aria-label="搜索">
+    <button type="button" class="btn btn--primary" id="random">🎲 今天吃什么？随机来一道</button>
+    <span class="count" id="count"></span>
+  </section>
+  <main class="grid" id="grid">
+<div class="slot" data-id="fries-float" data-vibes="下午茶,夜宵" data-difficulty="1" data-search="冰雪薯条 咸与甜的第一次握手 咸甜永动机 全网经典 好拍 薯条 圆筒冰淇淋">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -101,9 +137,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="fries-float">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-9009
+🍟❄️ 冰雪薯条 —— 咸与甜的第一次握手
+难度：新手友好 · 机制：蘸 · 场景：下午茶/夜宵 · 热度：★★★★★
+
+原料：
+  · 薯条　¥13.5
+  · 圆筒冰淇淋　¥5.0
+  合计：¥18.5
+
+改造步骤：
+  1. 点一份现炸薯条和一个圆筒冰淇淋
+  2. 捏住薯条根部，旋转蘸取冰淇淋
+  3. 趁冰淇淋没化，三秒内入口
+
+营养：382 千卡 · 蛋白质 6g · 脂肪 15g · 钠 201mg
+热量账单：散步约 95 分钟 / 慢跑约 40 分钟（估算）
+老饕提示：薯条要现炸的，冰淇淋用圆筒比新地更好蘸。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="cola-float" data-vibes="下午茶,正餐" data-difficulty="1" data-search="可乐浮雪 五块钱的麦乐酷平替 平替魔法 冰爽 好拍 可乐 圆筒冰淇淋">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -146,9 +207,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="cola-float">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-9735
+🥤⛷️ 可乐浮雪 —— 五块钱的麦乐酷平替
+难度：新手友好 · 机制：倒 · 场景：下午茶/正餐 · 热度：★★★★
+
+原料：
+  · 可乐　¥9.5
+  · 圆筒冰淇淋　¥5.0
+  合计：¥14.5
+
+改造步骤：
+  1. 先喝两口可乐腾出空间
+  2. 把整个圆筒倒扣进可乐里
+  3. 用吸管戳碎搅匀，得到一杯浮雪
+
+营养：240 千卡 · 蛋白质 2g · 脂肪 3g · 钠 36mg
+热量账单：散步约 60 分钟 / 慢跑约 25 分钟（估算）
+老饕提示：先喝两口再放圆筒，不然一定会溢出来。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="mega-stack" data-vibes="正餐,夜宵" data-difficulty="2" data-search="牛鸡双吉塔 一口咬穿两个汉堡 硬核组合 蛋白质炸弹 饱腹 双层吉士汉堡 麦香鸡">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -191,9 +277,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="mega-stack">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-7394
+🍔🍗 牛鸡双吉塔 —— 一口咬穿两个汉堡
+难度：进阶玩家 · 机制：夹 · 场景：正餐/夜宵 · 热度：★★★★
+
+原料：
+  · 双层吉士汉堡　¥23.0
+  · 麦香鸡　¥17.0
+  合计：¥40.0
+
+改造步骤：
+  1. 把麦香鸡整个夹进双吉中间（或反过来）
+  2. 轻轻压扁一点更稳
+  3. 双手拿稳，大口咬下去
+
+营养：798 千卡 · 蛋白质 42g · 脂肪 39g · 钠 1748mg
+热量账单：散步约 200 分钟 / 慢跑约 85 分钟（估算）
+老饕提示：先吃掉四分之一再合体，不然真的会散架。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="nugget-stack" data-vibes="正餐" data-difficulty="2" data-search="鸡块夹击堡 给汉堡加装弹药 加量流 饱腹 进阶 双层吉士汉堡 麦乐鸡">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -236,9 +347,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="nugget-stack">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-4786
+🍔🧨 鸡块夹击堡 —— 给汉堡加装弹药
+难度：进阶玩家 · 机制：夹 · 场景：正餐 · 热度：★★★
+
+原料：
+  · 双层吉士汉堡　¥23.0
+  · 麦乐鸡　¥14.0
+  合计：¥37.0
+
+改造步骤：
+  1. 打开双吉的上层面包
+  2. 鸡块蘸好随附的甜酸酱，平铺进去
+  3. 盖上面包压一压，一口咬到底
+
+营养：642 千卡 · 蛋白质 39g · 脂肪 34g · 钠 1439mg
+热量账单：散步约 160 分钟 / 慢跑约 70 分钟（估算）
+老饕提示：鸡块先蘸酱再夹，防滑又入味。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="fries-burger" data-vibes="正餐,夜宵" data-difficulty="1" data-search="薯条夹击堡 把快乐夹进面包里 全网经典 碳水叠碳水 新手友好 巨无霸 薯条">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -281,9 +417,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="fries-burger">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-8690
+🍔🍟 薯条夹击堡 —— 把快乐夹进面包里
+难度：新手友好 · 机制：夹 · 场景：正餐/夜宵 · 热度：★★★★★
+
+原料：
+  · 巨无霸　¥25.5
+  · 薯条　¥13.5
+  合计：¥39.0
+
+改造步骤：
+  1. 打开巨无霸的顶层
+  2. 塞入一把薯条（蘸不蘸酱随你）
+  3. 盖上盖子，趁薯条还脆咬下去
+
+营养：802 千卡 · 蛋白质 31g · 脂肪 38g · 钠 1126mg
+热量账单：散步约 200 分钟 / 慢跑约 85 分钟（估算）
+老饕提示：别塞太多，不然面包合不上。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="pie-alamode" data-vibes="下午茶" data-difficulty="1" data-search="冰火菠萝派 三分钟搭一个甜品台 冰火两重天 甜品控 好拍 派（选菠萝口味） 圆筒冰淇淋">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -326,9 +487,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="pie-alamode">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-1123
+🥧🔥 冰火菠萝派 —— 三分钟搭一个甜品台
+难度：新手友好 · 机制：冰火 · 场景：下午茶 · 热度：★★★★
+
+原料：
+  · 派　¥8.5
+  · 圆筒冰淇淋　¥5.0
+  合计：¥13.5
+
+改造步骤：
+  1. 把热菠萝派掰成两半
+  2. 把圆筒冰淇淋扣在派上
+  3. 等 10 秒，冰火交界处最好吃
+
+营养：314 千卡 · 蛋白质 4g · 脂肪 14g · 钠 183mg
+热量账单：散步约 80 分钟 / 慢跑约 35 分钟（估算）
+老饕提示：香芋派也通用，菠萝派酸甜更搭。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="affogato" data-vibes="下午茶" data-difficulty="1" data-search="鲜萃阿芙佳朵 比官方阿芙佳朵更大杯的 DIY 版 高级感 甜品控 麦咖啡周边 鲜萃咖啡 圆筒冰淇淋">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -371,9 +557,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="affogato">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-5244
+☕🍦 鲜萃阿芙佳朵 —— 比官方阿芙佳朵更大杯的 DIY 版
+难度：新手友好 · 机制：倒 · 场景：下午茶 · 热度：★★★★
+
+原料：
+  · 鲜萃咖啡　¥9.5
+  · 圆筒冰淇淋　¥5.0
+  合计：¥14.5
+
+改造步骤：
+  1. 点一杯鲜萃咖啡和一个圆筒
+  2. 把圆筒的冰淇淋刮进咖啡杯（或直接把咖啡浇上去）
+  3. 等冰淇淋边缘微微融化，勺子挖着吃
+
+营养：108 千卡 · 蛋白质 3g · 脂肪 3g · 钠 38mg
+热量账单：散步约 25 分钟 / 慢跑约 10 分钟（估算）
+老饕提示：想要更浓就换浓缩咖啡，想要更甜就换新地。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="shake-fries" data-vibes="下午茶,夜宵" data-difficulty="1" data-search="酸甜摇摇薯 不用摇摇粉也能摇 仪式感 重口味 好拍 薯条 麦乐鸡">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -416,9 +627,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="shake-fries">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-1431
+🍟🎵 酸甜摇摇薯 —— 不用摇摇粉也能摇
+难度：新手友好 · 机制：摇 · 场景：下午茶/夜宵 · 热度：★★★
+
+原料：
+  · 薯条　¥13.5
+  · 麦乐鸡　¥14.0
+  合计：¥27.5
+
+改造步骤：
+  1. 点薯条 + 麦乐鸡，多要一盒甜酸酱和番茄酱
+  2. 把薯条和酱倒进干净的纸袋（或空盒）
+  3. 摇到每根薯条都裹上酱，趁脆吃
+
+营养：502 千卡 · 蛋白质 16g · 脂肪 24g · 钠 587mg
+热量账单：散步约 125 分钟 / 慢跑约 55 分钟（估算）
+老饕提示：用纸袋摇更均匀，摇完立刻吃。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="hashbrown-stack" data-vibes="早餐" data-difficulty="1" data-search="薯饼夹击堡 早八人的加装包 早餐限定 加量流 早八回魂 猪柳蛋麦满分 脆薯饼">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -461,9 +697,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="hashbrown-stack">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-2596
+🌅🍳 薯饼夹击堡 —— 早八人的加装包
+难度：新手友好 · 机制：夹 · 场景：早餐 · 热度：★★★★
+
+原料：
+  · 猪柳蛋麦满分　¥18.0
+  · 脆薯饼　¥8.5
+  合计：¥26.5
+
+改造步骤：
+  1. 打开麦满分
+  2. 把薯饼夹进肉饼下面
+  3. 合上，配豆浆或咖啡，早八回魂
+
+营养：533 千卡 · 蛋白质 24g · 脂肪 30g · 钠 1157mg
+热量账单：散步约 135 分钟 / 慢跑约 55 分钟（估算）
+老饕提示：薯饼要现炸的，软了就没灵魂。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="soy-youtiao" data-vibes="早餐" data-difficulty="1" data-search="豆浆泡油条 中式早点的麦记解法 早餐限定 中式混搭 早八回魂 脆香油条 优品豆浆 麦咖啡美式">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -506,9 +767,35 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="soy-youtiao">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-4151
+🌅🥖 豆浆泡油条 —— 中式早点的麦记解法
+难度：新手友好 · 机制：蘸 · 场景：早餐 · 热度：★★★
+
+原料：
+  · 脆香油条　¥8.5
+  · 优品豆浆　¥9.5
+  · 麦咖啡™美式　¥11.9
+  合计：¥29.9
+
+改造步骤：
+  1. 油条掰成小段
+  2. 泡进热豆浆三秒（别泡软）
+  3. 配一杯美式，早八回魂套餐完成
+
+营养：366 千卡 · 蛋白质 12g · 脂肪 15g · 钠 262mg
+热量账单：散步约 90 分钟 / 慢跑约 40 分钟（估算）
+老饕提示：三秒是黄金时间，久了就塌了。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="brave-nugget" data-vibes="下午茶,夜宵" data-difficulty="3" data-search="勇者鸡块 甜咸党的终极试炼 地狱试炼 咸甜永动机 挑战 麦乐鸡 新地（选草莓）">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -551,9 +838,34 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="brave-nugget">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-8028
+🍗🍧 勇者鸡块 —— 甜咸党的终极试炼
+难度：地狱试炼 · 机制：蘸 · 场景：下午茶/夜宵 · 热度：★★★
+
+原料：
+  · 麦乐鸡　¥14.0
+  · 新地　¥12.0
+  合计：¥26.0
+
+改造步骤：
+  1. 点一份麦乐鸡和一杯草莓新地
+  2. 鸡块蘸新地
+  3. 吃完的算你狠，拍照发群算你赢
+
+营养：458 千卡 · 蛋白质 16g · 脂肪 18g · 钠 506mg
+热量账单：散步约 115 分钟 / 慢跑约 50 分钟（估算）
+老饕提示：推荐草莓新地，酸甜口更搭；朱古力味是更深的深渊。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
+<div class="slot" data-id="yijia-yi" data-vibes="正餐,夜宵" data-difficulty="1" data-search="1+1 魔法组合 两套随心配拼出一个四件套 省钱流 学生党 组合学 随心配 1+1">
 <article class="card">
   <div class="stamp">SECRET</div>
   <header class="card__header">
@@ -596,14 +908,93 @@ ol.steps{margin:0;padding-left:18px;font-size:13px;line-height:1.75;}
   </section>
   <footer class="card__footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    生成时间 2026.10.10 17:29 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
+    生成时间 2026.10.12 09:08 · 数据来源：快照（演示） · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">github.com/wangwengao/mcd-secret-menu-lab</a>
   </footer>
 </article>
+<div class="slot__actions">
+  <button type="button" class="btn btn--ghost" data-copy="yijia-yi">📋 复制文字版</button>
+  <a class="btn btn--ghost" href="https://github.com/wangwengao/mcd-secret-menu-lab#快速开始" target="_blank" rel="noopener">⌘ 用 CLI 算价 / 下单</a>
+</div>
+<textarea class="slot__text" aria-hidden="true">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 麦门隐藏菜单研究所 · 机密档案 No.SML-0810
+💰✨ 1+1 魔法组合 —— 两套随心配拼出一个四件套
+难度：新手友好 · 机制：组合 · 场景：正餐/夜宵 · 热度：★★★★
+
+原料：
+  · 精选超值随心配 ×2　¥27.8
+  合计：¥27.8
+
+改造步骤：
+  1. 第一套随心配：主食选汉堡，小食选薯条
+  2. 第二套随心配：主食选麦乐鸡，饮品选可乐
+  3. 两套组合约等于一个四件套，钱包友好
+
+营养：营养数据待补全（该餐品不在营养表中）
+老饕提示：可选餐品以门店随心配菜单为准，下单时在详情里挑。
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</textarea>
+</div>
   </main>
   <footer class="page-footer">
     本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。<br>
-    开源项目 · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">https://github.com/wangwengao/mcd-secret-menu-lab</a> · 基于麦当劳 MCP 构建
+    开源项目 · <a href="https://github.com/wangwengao/mcd-secret-menu-lab">https://github.com/wangwengao/mcd-secret-menu-lab</a> · 基于麦当劳 MCP 构建 · 本页纯静态，不发起任何网络请求
   </footer>
 </div>
+<script>
+(function () {
+  var slots = Array.prototype.slice.call(document.querySelectorAll('.slot'));
+  var state = { vibe: '', difficulty: '', q: '' };
+  var count = document.getElementById('count');
+  function apply() {
+    var shown = 0;
+    slots.forEach(function (s) {
+      var okV = !state.vibe || s.getAttribute('data-vibes').split(',').indexOf(state.vibe) >= 0;
+      var okD = !state.difficulty || s.getAttribute('data-difficulty') === state.difficulty;
+      var okQ = !state.q || s.getAttribute('data-search').toLowerCase().indexOf(state.q) >= 0;
+      var on = okV && okD && okQ;
+      if (on) { s.removeAttribute('hidden'); shown += 1; } else { s.setAttribute('hidden', ''); }
+    });
+    count.textContent = '显示 ' + shown + ' / ' + slots.length + ' 道';
+  }
+  function bindChips(attr, key) {
+    var chips = Array.prototype.slice.call(document.querySelectorAll('[' + attr + ']'));
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        state[key] = chip.getAttribute(attr);
+        chips.forEach(function (c) { c.classList.toggle('tchip--on', c === chip); });
+        apply();
+      });
+    });
+  }
+  bindChips('data-v', 'vibe');
+  bindChips('data-d', 'difficulty');
+  document.querySelector('.search').addEventListener('input', function (e) {
+    state.q = e.target.value.trim().toLowerCase();
+    apply();
+  });
+  document.getElementById('random').addEventListener('click', function () {
+    var visible = slots.filter(function (s) { return !s.hasAttribute('hidden'); });
+    if (!visible.length) return;
+    slots.forEach(function (s) { s.classList.remove('slot--hit'); });
+    var pick = visible[Math.floor(Math.random() * visible.length)];
+    pick.classList.add('slot--hit');
+    pick.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.slot').querySelector('.slot__text').value;
+      var done = function (ok) {
+        btn.textContent = ok ? '✅ 已复制' : '❌ 复制失败';
+        setTimeout(function () { btn.textContent = '📋 复制文字版'; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      } else { done(false); }
+    });
+  });
+  var hash = decodeURIComponent(location.hash.slice(1));
+  if (hash === 'random') { document.getElementById('random').click(); }
+  apply();
+})();
+</script>
 </body>
 </html>
