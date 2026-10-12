@@ -12,9 +12,9 @@ import { MECHANICS, DIFFICULTY_LABEL } from './recipes.mjs';
 import { nutritionLine, NUTRITION_DISCLAIMER } from './nutrition.mjs';
 import { fmtMoney } from './util.mjs';
 
-export const REPO_URL = 'https://github.com/wangwengao/mcd-secret-menu-lab';
+export const REPO_URL = 'https://github.com/wangxs1995/mcd-secret-menu-lab';
 /** 静态资源（配方卡 PNG）的直链根地址 */
-export const ASSET_BASE = 'https://raw.githubusercontent.com/wangwengao/mcd-secret-menu-lab/main';
+export const ASSET_BASE = 'https://raw.githubusercontent.com/wangxs1995/mcd-secret-menu-lab/main';
 
 const DISCLAIMER =
   '本卡片由粉丝开源项目「麦门隐藏菜单研究所」生成，非麦当劳官方内容；餐品信息、价格与供应状态以麦当劳官方渠道为准。';

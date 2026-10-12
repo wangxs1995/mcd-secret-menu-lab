@@ -15,7 +15,7 @@
 
 我没做省钱计算器，也没做热量管家——这两个赛道已经挤满了。我做的是「隐藏菜单」：薯条蘸圆筒、可乐扣冰淇淋、鸡块夹进双吉这类在社交平台上流传的吃法，一直只是截图，没人把它变成**可验证、可计算、可执行**的东西。
 
-项目叫「麦门隐藏菜单研究所」（MCD Secret Menu Lab），开源：https://github.com/wangwengao/mcd-secret-menu-lab
+项目叫「麦门隐藏菜单研究所」（MCD Secret Menu Lab），开源：https://github.com/wangxs1995/mcd-secret-menu-lab
 
 ### 它做什么
 
@@ -52,6 +52,6 @@ v1 只做到店自取（外送要配送地址与 beCode）；随心配这类组�
 
 仓库里有完整的 `MCP_INTEGRATION.md`（含每次联调的 traceId）、12 张配方卡、演示页和自测。如果你也想投稿一个隐藏吃法，Issue 模板已经准备好了。
 
-https://github.com/wangwengao/mcd-secret-menu-lab
+https://github.com/wangxs1995/mcd-secret-menu-lab
 
 （本项目是粉丝开源作品，非麦当劳官方产品；价格与供应以门店实时为准。）

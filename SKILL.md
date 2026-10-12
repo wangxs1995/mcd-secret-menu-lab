@@ -96,12 +96,12 @@ node src/lab.mjs order --recipe fries-float --store <storeCode> --yes  # 真实�
 
 **热量**：382 千卡（蛋白质 6g · 脂肪 15g · 钠 201mg）（按营养表累加，估算，仅供参考）
 **老饕提示**：薯条要现炸的，冰淇淋用圆筒比新地更好蘸。
-🃏 **配方卡**：https://wangwengao.github.io/mcd-secret-menu-lab/cards/fries-float.html
+🃏 **配方卡**：https://wangxs1995.github.io/mcd-secret-menu-lab/cards/fries-float.html
 ```
 
 「配方卡」这一行按情况填：
 
-- 方案是图鉴里的 12 道之一：在线卡片 `https://wangwengao.github.io/mcd-secret-menu-lab/cards/<id>.html`（图片直链 `https://raw.githubusercontent.com/wangwengao/mcd-secret-menu-lab/main/assets/cards/<id>.png`）
+- 方案是图鉴里的 12 道之一：在线卡片 `https://wangxs1995.github.io/mcd-secret-menu-lab/cards/<id>.html`（图片直链 `https://raw.githubusercontent.com/wangxs1995/mcd-secret-menu-lab/main/assets/cards/<id>.png`）
 - 自创吃法（模式 A）：运行 `node src/lab.mjs card --spec '{"name":"薯饼冰淇淋三明治","emoji":"🍦","tagline":"…","ingredients":["脆薯饼","圆筒冰淇淋"],"steps":["…","…","…"],"vibes":["早餐"]}' --png`，把生成的 HTML / PNG 路径写在这一行
 - 自创吃法（模式 B，无法运行命令）：写「用仓库的 `card --spec` 命令可生成图片版」
 

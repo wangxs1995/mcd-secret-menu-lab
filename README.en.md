@@ -6,7 +6,7 @@
 <p align="center">Invent, verify and order McDonald's "secret menu" hacks — built on the official McDonald's China MCP</p>
 
 <p align="center">
-  <a href="./README.md">中文</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">Live demo</a> · <a href="./MCP_INTEGRATION.md">MCP integration</a>
+  <a href="./README.md">中文</a> · <a href="https://wangxs1995.github.io/mcd-secret-menu-lab/demo.html">Live demo</a> · <a href="./MCP_INTEGRATION.md">MCP integration</a>
 </p>
 
 > Fries dipped in a soft-serve cone, a cone dropped into a Coke, nuggets stacked inside a double cheeseburger — the internet is full of McDonald's "secret menu" hacks. This project turns them into something you can **verify against a real store menu, price, visualize as a shareable card, and order in one click**. Zero dependencies. Works without a token (real data snapshots included).
@@ -21,7 +21,7 @@
 
 ## 30-second tour
 
-Zero-install, pure-static demo: https://wangwengao.github.io/mcd-secret-menu-lab/demo.html — filter by daypart / difficulty, search ingredients, hit "🎲 random", copy the text version or download the PNG.
+Zero-install, pure-static demo: https://wangxs1995.github.io/mcd-secret-menu-lab/demo.html — filter by daypart / difficulty, search ingredients, hit "🎲 random", copy the text version or download the PNG.
 
 <table>
   <tr>
@@ -50,12 +50,12 @@ $ node src/lab.mjs price --recipe fries-float --store 1450713
 2. **Configure the MCP connector** — in WorkBuddy: sidebar "专家 · 技能 · 连接器" → "连接器" → "自定义连接器" → "配置 MCP", paste [`mcp-config/workbuddy-cherry-studio.json`](./mcp-config/workbuddy-cherry-studio.json) with your token, save and enable `mcd-mcp`. Templates for Cursor / Claude Code / VS Code are in [`mcp-config/`](./mcp-config/README.md).
 3. **Install the skill** — `git clone`, `cp .env.example .env` (token, optionally a default `MCD_STORE_CODE`), then `.\install.ps1` or `bash install.sh`; verify with `node src/lab.mjs doctor`. Or import [`dist/mcd-secret-menu-lab-skill.zip`](./dist/mcd-secret-menu-lab-skill.zip).
 4. **Use it** — ask in plain language: "a secret-menu hack under ¥30", "late-night, something sweet-and-salty near People's Square, Shanghai", "make the first one a card". The reply is a Markdown recipe card with live prices and calories, plus a card link or a generated PNG.
-5. **Order or share** — "order the first one": dry-run with live pricing → you confirm → order created → pay through McDonald's official channel, then do the hack yourself. Share the Markdown card or download the PNG from the [demo page](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html); submit your own hack via the issue template.
+5. **Order or share** — "order the first one": dry-run with live pricing → you confirm → order created → pay through McDonald's official channel, then do the hack yourself. Share the Markdown card or download the PNG from the [demo page](https://wangxs1995.github.io/mcd-secret-menu-lab/demo.html); submit your own hack via the issue template.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/wangwengao/mcd-secret-menu-lab.git
+git clone https://github.com/wangxs1995/mcd-secret-menu-lab.git
 cd mcd-secret-menu-lab
 
 # No token needed — real snapshots (183 menu items + 158 nutrition rows) are bundled
@@ -108,4 +108,4 @@ No code needed: open an issue with the "🍟 投稿一个隐藏吃法" template.
 
 ## License
 
-[MIT](./LICENSE) © 2026 wangwengao
+[MIT](./LICENSE) © 2026 wangxs1995

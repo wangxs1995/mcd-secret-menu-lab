@@ -6,7 +6,7 @@
 <p align="center"><b>MCD Secret Menu Lab</b> · 用麦当劳真实在售餐品，发明、验证、下单「隐藏吃法」</p>
 
 <p align="center">  
-  <a href="https://github.com/wangwengao/mcd-secret-menu-lab/stargazers"><img src="https://img.shields.io/github/stars/wangwengao/mcd-secret-menu-lab?style=social" alt="stars"></a>  
+  <a href="https://github.com/wangxs1995/mcd-secret-menu-lab/stargazers"><img src="https://img.shields.io/github/stars/wangxs1995/mcd-secret-menu-lab?style=social" alt="stars"></a>  
   <img src="https://img.shields.io/badge/McDonald's-MCP-c8102e" alt="McDonald's MCP">  
   <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen" alt="node">  
   <img src="https://img.shields.io/badge/dependencies-0-blue" alt="zero deps">  
@@ -17,7 +17,7 @@
 > 薯条蘸圆筒、可乐扣冰淇淋、鸡块夹进双吉……这些在小红书上流传的「麦门隐藏吃法」，终于有了一个能**校验门店真能做、算清价格和热量、生成可晒的配方卡、一键下单**的工具。基于麦当劳官方 MCP，零依赖，没有 Token 也能完整体验。
 
 <p align="center">  
-  <a href="./README.en.md">English</a> · <a href="https://wangwengao.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#完整上手流程">完整上手</a> · <a href="#命令行快速开始">命令行</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>  
+  <a href="./README.en.md">English</a> · <a href="https://wangxs1995.github.io/mcd-secret-menu-lab/demo.html">在线演示</a> · <a href="#完整上手流程">完整上手</a> · <a href="#命令行快速开始">命令行</a> · <a href="./MCP_INTEGRATION.md">MCP 集成说明</a> · <a href="./docs/share/README.md">分享素材</a>  
 </p>
 
 ## 这是什么？
@@ -44,7 +44,7 @@
 
 ## 30 秒看效果
 
-**在线演示页**（零安装，纯静态）：[wangwengao.github.io/mcd-secret-menu-lab/demo.html](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html) · 或直接打开仓库里的 [`docs/demo.html`](./docs/demo.html)  
+**在线演示页**（零安装，纯静态）：[wangxs1995.github.io/mcd-secret-menu-lab/demo.html](https://wangxs1995.github.io/mcd-secret-menu-lab/demo.html) · 或直接打开仓库里的 [`docs/demo.html`](./docs/demo.html)  
 按场景 / 难度筛选、搜原料、🎲「今天吃什么？随机来一道」、一键复制文字版配方——12 张配方卡全部基于真实快照。
 
 <table>  
@@ -143,7 +143,7 @@ Cursor / Claude Code / VS Code / Cherry Studio 的配置模板在 [`mcp-config/`
 ### 第 3 步 · 安装 Skill
 
 ```bash
-git clone https://github.com/wangwengao/mcd-secret-menu-lab.git
+git clone https://github.com/wangxs1995/mcd-secret-menu-lab.git
 cd mcd-secret-menu-lab
 cp .env.example .env        # 填入 MCD_MCP_TOKEN；可选再填 MCD_STORE_CODE（默认门店，见第 4 步）
 .\install.ps1               # Windows；macOS / Linux 用 bash install.sh
@@ -168,12 +168,12 @@ node src/lab.mjs doctor     # 自检：Token / 连通性 / 35 个工具 / 服务
 
 **下单**：对它说「就第一个，帮我下单」→ 它先做预演（MCP 实时算价、堂食 / 外带可选）→ 你确认 → 创建订单 → 用返回的支付入口在麦当劳官方渠道完成支付 → 取餐后按改造步骤自己动手（拆 / 夹 / 蘸 / 摇）。全程不会自动扣款。
 
-**分享**：复制回复里的 Markdown 卡片，或在[在线演示页](https://wangwengao.github.io/mcd-secret-menu-lab/demo.html)点「⬇️ 下载配方卡 PNG」，发小红书 / 朋友圈（现成文案见 [`docs/share/`](./docs/share/README.md)）。自己发明了新吃法？用 [Issue 模板](../../issues/new?template=recipe.yml)投稿，通过的会进图鉴并署名。
+**分享**：复制回复里的 Markdown 卡片，或在[在线演示页](https://wangxs1995.github.io/mcd-secret-menu-lab/demo.html)点「⬇️ 下载配方卡 PNG」，发小红书 / 朋友圈（现成文案见 [`docs/share/`](./docs/share/README.md)）。自己发明了新吃法？用 [Issue 模板](../../issues/new?template=recipe.yml)投稿，通过的会进图鉴并署名。
 
 ## 命令行快速开始
 
 ```bash
-git clone https://github.com/wangwengao/mcd-secret-menu-lab.git
+git clone https://github.com/wangxs1995/mcd-secret-menu-lab.git
 cd mcd-secret-menu-lab
 
 # 1) 不需要 Token，先玩起来（内置真实快照：183 个餐品 + 158 项营养数据）
@@ -335,4 +335,4 @@ mcd-secret-menu-lab/
 
 ## License
 
-[MIT](./LICENSE) © 2026 wangwengao
+[MIT](./LICENSE) © 2026 wangxs1995

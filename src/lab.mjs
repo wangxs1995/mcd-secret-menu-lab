@@ -21,7 +21,7 @@ import { sumPrice, quoteViaMcp } from './pricing.mjs';
 import { normalizeMenuData, parseNutritionData, parseCampaignCalendar } from './mcp-parse.mjs';
 import { renderCardHtml, renderCardPage, renderSocialPage, printCardText, printCardMarkdown, writeFileEnsured } from './card.mjs';
 /** GitHub Pages 根地址（独立卡片页 docs/cards/<id>.html） */
-const PAGES_URL = 'https://wangwengao.github.io/mcd-secret-menu-lab';
+const PAGES_URL = 'https://wangxs1995.github.io/mcd-secret-menu-lab';
 import { checkText, checkRecipes } from './compliance.mjs';
 import { inventRecipes } from './invent.mjs';
 import { readFileSync, existsSync } from 'node:fs';

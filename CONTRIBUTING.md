@@ -15,7 +15,7 @@
 ## 2. 提 PR
 
 ```bash
-git clone https://github.com/wangwengao/mcd-secret-menu-lab.git
+git clone https://github.com/wangxs1995/mcd-secret-menu-lab.git
 cd mcd-secret-menu-lab
 npm test                       # 零依赖，node --test
 ```
